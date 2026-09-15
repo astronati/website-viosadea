@@ -1,0 +1,28 @@
+---
+import { ICONS, type IconName } from './icons';
+
+interface Props {
+  name: IconName;
+  size?: number;
+  class?: string;
+  /** testo per screen reader; senza, l'icona è decorativa */
+  label?: string;
+}
+const { name, size = 24, class: className, label } = Astro.props;
+---
+
+<svg
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  fill={name === 'star' ? 'currentColor' : 'none'}
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class:list={['icon', className]}
+  aria-hidden={label ? undefined : 'true'}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  set:html={ICONS[name]}
+/>

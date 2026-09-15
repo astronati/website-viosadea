@@ -1,0 +1,145 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+import { getCopy } from '../content';
+import { photo } from '../data/gallery';
+import type { Locale } from '../i18n/locales';
+import { useTranslations } from '../i18n/utils';
+import { breadcrumbJsonLd } from '../lib/jsonld';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const copy = getCopy(locale);
+const l = copy.location;
+const position = photo('esterno/posizione.jpg');
+const dusk = photo('panorama/sassolungo-sera.jpg');
+---
+
+<Base
+  title={copy.meta.location.title}
+  description={copy.meta.location.description}
+  locale={locale}
+  pageKey="location"
+  jsonLd={[
+    breadcrumbJsonLd(locale, [
+      { key: 'home', name: t('breadcrumb.home') },
+      { key: 'location', name: t('nav.location') },
+    ]),
+  ]}
+>
+  <PageHeader locale={locale} pageKey="location" eyebrow={l.eyebrow} title={l.title} subtitle={l.subtitle} />
+
+  <section class="section">
+    <div class="container split">
+      <div class="prose">
+        {l.intro.map((p, i) => <p class:list={{ lead: i === 0 }}>{p}</p>)}
+      </div>
+      <div class="photos">
+        <div class="rounded-img"><Photo photo={position} locale={locale} sizes="(min-width: 960px) 22vw, 45vw" /></div>
+        <div class="rounded-img"><Photo photo={dusk} locale={locale} sizes="(min-width: 960px) 22vw, 45vw" /></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container split">
+      <div>
+        <h2>{l.distancesTitle}</h2>
+        <ul class="distances">
+          {
+            l.distances.map((d) => (
+              <li>
+                <Icon name="pin" size={18} />
+                <span>{d.place}</span>
+                <strong>{d.distance}</strong>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div>
+        <MapEmbed locale={locale} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid grid-2">
+      <article class="card season">
+        <span class="season-icon"><Icon name="snow" size={28} /></span>
+        <h2>{l.winterTitle}</h2>
+        <p>{l.winterText}</p>
+      </article>
+      <article class="card season">
+        <span class="season-icon summer"><Icon name="sun" size={28} /></span>
+        <h2>{l.summerTitle}</h2>
+        <p>{l.summerText}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section-sage">
+    <div class="container arrival">
+      <span class="arrival-icon"><Icon name="parking" size={32} /></span>
+      <div>
+        <h2>{l.arrivalTitle}</h2>
+        <p>{l.arrivalText}</p>
+      </div>
+    </div>
+  </section>
+
+  <FinalCTA locale={locale} title={copy.home.finalTitle} text={copy.home.finalText} />
+</Base>
+
+<style>
+  .photos { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .photos :global(img) { aspect-ratio: 3 / 4; }
+
+  .distances { list-style: none; padding: 0; margin: 1.25rem 0 0; display: grid; gap: 0.5rem; }
+  .distances li {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: var(--radius-sm);
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+  }
+  .distances :global(.icon) { color: var(--c-forest); }
+  .distances strong { color: var(--c-brown); text-align: right; }
+
+  .season h2 { font-size: clamp(1.4rem, 4vw, 1.9rem); }
+  .season p { color: var(--c-ink-soft); }
+  .season-icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: #e3ecf3;
+    color: #2f5d7c;
+    margin-bottom: 1rem;
+  }
+  .season-icon.summer { background: var(--c-tan-soft); color: var(--c-brown); }
+
+  .arrival { display: flex; gap: 1.1rem; align-items: flex-start; max-width: 52rem; }
+  .arrival p { margin: 0; color: var(--c-ink); }
+  .arrival-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: var(--c-brown);
+    color: #fff;
+  }
+</style>

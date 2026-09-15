@@ -1,0 +1,19 @@
+# build output
+dist/
+# generated types
+.astro/
+# dependencies
+node_modules/
+# logs
+npm-debug.log*
+# environment
+.env
+.env.production
+.dev.vars
+.envrc
+# cloudflare / wrangler
+.wrangler/
+# macOS
+.DS_Store
+# photo import scratch (originals downloaded before normalisation)
+.photo-cache/

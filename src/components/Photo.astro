@@ -1,0 +1,42 @@
+---
+// Foto responsive: AVIF + WebP generati a build time, larghezze limitate all'originale.
+import { Picture } from 'astro:assets';
+import type { Photo as PhotoData } from '../data/gallery';
+import type { Locale } from '../i18n/locales';
+
+interface Props {
+  photo: PhotoData;
+  locale: Locale;
+  sizes: string;
+  widths?: number[];
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  class?: string;
+}
+
+const {
+  photo,
+  locale,
+  sizes,
+  widths = [400, 640, 960, 1280, 1600],
+  loading = 'lazy',
+  fetchpriority,
+  class: className,
+} = Astro.props;
+
+const max = photo.src.width;
+const usable = widths.filter((w) => w < max);
+if (usable.length < widths.length) usable.push(max);
+---
+
+<Picture
+  src={photo.src}
+  alt={photo.alt[locale]}
+  formats={['avif', 'webp']}
+  widths={usable}
+  sizes={sizes}
+  loading={loading}
+  decoding="async"
+  fetchpriority={fetchpriority}
+  class={className}
+/>

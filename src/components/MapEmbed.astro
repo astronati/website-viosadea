@@ -1,0 +1,78 @@
+---
+// Google Maps "click to load": nessun cookie di terze parti finché l'utente non lo chiede.
+import Icon from './Icon.astro';
+import { SITE } from '../consts';
+import type { Locale } from '../i18n/locales';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const a = SITE.address;
+const query = `${a.street}, ${a.postalCode} ${a.locality} ${a.province}`;
+const embed = `https://www.google.com/maps?q=${encodeURIComponent(query)}&z=16&hl=${locale}&output=embed`;
+const open = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+---
+
+<div class="map" data-map-src={embed}>
+  <div class="map-placeholder">
+    <Icon name="pin" size={34} />
+    <p class="map-place">{SITE.name} · {a.locality}</p>
+    <button type="button" class="btn btn-primary">{t('map.load')}</button>
+    <p class="map-notice">{t('map.notice')}</p>
+  </div>
+</div>
+<p class="map-open">
+  <a href={open} target="_blank" rel="noopener">
+    <Icon name="external" size={16} />
+    {t('map.open')}
+  </a>
+</p>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-map-src]').forEach((el) => {
+    el.querySelector('button')?.addEventListener('click', () => {
+      const frame = document.createElement('iframe');
+      frame.src = el.dataset.mapSrc ?? '';
+      frame.title = 'Google Maps';
+      frame.loading = 'lazy';
+      frame.referrerPolicy = 'no-referrer-when-downgrade';
+      frame.allowFullscreen = true;
+      el.replaceChildren(frame);
+    });
+  });
+</script>
+
+<style>
+  .map {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--c-line);
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), transparent 60%),
+      repeating-linear-gradient(45deg, var(--c-sage-soft) 0 18px, var(--c-bg-alt) 18px 36px);
+  }
+  @media (min-width: 960px) { .map { aspect-ratio: 16 / 10; } }
+  .map :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .map-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 1.25rem;
+    text-align: center;
+    color: var(--c-brown);
+  }
+  .map-place { font-weight: 800; margin: 0; }
+  .map-notice { font-size: 0.8rem; color: var(--c-ink-soft); max-width: 36ch; margin: 0; }
+  .map-open { margin: 0.75rem 0 0; }
+  .map-open a { display: inline-flex; align-items: center; gap: 0.4rem; font-weight: 700; min-height: 44px; }
+</style>

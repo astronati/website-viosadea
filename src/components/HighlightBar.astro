@@ -1,0 +1,86 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from './icons';
+import type { Locale } from '../i18n/locales';
+import { useTranslations, type UIKey } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const items: { icon: IconName; key: 'pets' | 'parking' | 'lift' | 'wifi'; highlight?: boolean }[] = [
+  { icon: 'paw', key: 'pets', highlight: true },
+  { icon: 'parking', key: 'parking', highlight: true },
+  { icon: 'cablecar', key: 'lift' },
+  { icon: 'wifi', key: 'wifi' },
+];
+---
+
+<div class="container">
+  <ul class="highlights">
+    {
+      items.map((item) => (
+        <li class:list={['highlight', { 'is-key': item.highlight }]}>
+          <span class="highlight-icon">
+            <Icon name={item.icon} size={26} />
+          </span>
+          <span>
+            <strong>{t(`badge.${item.key}` as UIKey)}</strong>
+            <small>{t(`badge.${item.key}.sub` as UIKey)}</small>
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .highlights {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0 0;
+  }
+  .highlight {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 0.95rem;
+    border-radius: var(--radius-sm);
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    line-height: 1.25;
+  }
+  .highlight strong { display: block; color: var(--c-ink); font-size: 0.95rem; }
+  .highlight small { display: block; color: var(--c-ink-soft); font-size: 0.8rem; margin-top: 0.15rem; }
+  .highlight-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--c-bg-alt);
+    color: var(--c-forest);
+  }
+  .highlight.is-key { background: var(--c-tan-soft); border-color: #e8cfae; }
+  .highlight.is-key .highlight-icon { background: var(--c-brown); color: #fff; }
+  .highlight.is-key strong { color: var(--c-brown); }
+
+  @media (min-width: 640px) {
+    .highlight { flex-direction: row; align-items: center; gap: 0.85rem; padding: 1.1rem; }
+  }
+  @media (min-width: 960px) {
+    .highlights {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: -3.25rem;
+      position: relative;
+      z-index: 2;
+    }
+    .highlight { box-shadow: var(--shadow); }
+  }
+</style>

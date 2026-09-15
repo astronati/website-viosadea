@@ -1,0 +1,52 @@
+---
+import Icon from './Icon.astro';
+import { airbnbUrl, bookingUrl, whatsappUrl } from '../consts';
+import type { Locale } from '../i18n/locales';
+import { pathFor } from '../i18n/routes';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  text: string;
+}
+const { locale, title, text } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section class="final section">
+  <div class="container final-inner">
+    <h2>{title}</h2>
+    <p>{text}</p>
+    <div class="cta-row center">
+      <a class="btn btn-light" href={pathFor('contact', locale, 'richiesta')}>
+        <Icon name="calendar" />
+        {t('cta.request')}
+      </a>
+      <a class="btn btn-wa" href={whatsappUrl(t('wa.message'))} target="_blank" rel="noopener">
+        <Icon name="whatsapp" />
+        {t('cta.whatsapp')}
+      </a>
+    </div>
+    <p class="portals">
+      <a href={bookingUrl(locale)} target="_blank" rel="noopener">{t('cta.booking')}</a>
+      <span aria-hidden="true">·</span>
+      <a href={airbnbUrl(locale)} target="_blank" rel="noopener">{t('cta.airbnb')}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .final {
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgba(212, 163, 115, 0.28), transparent 60%),
+      var(--c-brown);
+    color: #f6eee3;
+    text-align: center;
+  }
+  .final-inner { max-width: 44rem; }
+  .final h2 { color: #fff; }
+  .final p { color: #eadccb; font-size: 1.05rem; }
+  .portals { margin: 1.25rem 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; font-size: 0.92rem; }
+  .portals a { color: #fff; min-height: 44px; display: inline-flex; align-items: center; }
+</style>

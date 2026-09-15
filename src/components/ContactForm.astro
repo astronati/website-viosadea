@@ -1,0 +1,339 @@
+---
+// Modulo richiesta disponibilità -> POST /api/richiesta (Worker, Turnstile, email).
+import Icon from './Icon.astro';
+import { SITE, whatsappUrl } from '../consts';
+import type { Locale } from '../i18n/locales';
+import { pathFor } from '../i18n/routes';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const messages = {
+  sending: t('form.sending'),
+  error: t('form.error'),
+  network: t('form.network'),
+  wa: t('wa.message'),
+  checkin: t('form.checkin'),
+  checkout: t('form.checkout'),
+  adults: t('form.adults'),
+  children: t('form.children'),
+  pets: t('form.pets'),
+  yes: t('form.pets.yes'),
+};
+const max = SITE.apartment.maxGuests;
+---
+
+<form id="request-form" class="request-form" novalidate data-messages={JSON.stringify(messages)}>
+  <input type="hidden" name="locale" value={locale} />
+  <div class="hp" aria-hidden="true">
+    <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <div class="field">
+    <label for="f-name">{t('form.name')} *</label>
+    <input id="f-name" name="name" required autocomplete="name" maxlength="100" />
+    <p class="field-error" data-error-for="name"></p>
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label for="f-email">{t('form.email')} *</label>
+      <input id="f-email" name="email" type="email" required autocomplete="email" inputmode="email" maxlength="200" />
+      <p class="field-error" data-error-for="email"></p>
+    </div>
+    <div class="field">
+      <label for="f-phone">{t('form.phone')} <span class="opt">({t('form.optional')})</span></label>
+      <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="40" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label for="f-checkin">{t('form.checkin')} *</label>
+      <input id="f-checkin" name="checkin" type="date" required />
+      <p class="field-error" data-error-for="checkin"></p>
+    </div>
+    <div class="field">
+      <label for="f-checkout">{t('form.checkout')} *</label>
+      <input id="f-checkout" name="checkout" type="date" required />
+      <p class="field-error" data-error-for="checkout"></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label for="f-adults">{t('form.adults')}</label>
+      <select id="f-adults" name="adults">
+        {Array.from({ length: max }, (_, i) => <option value={i + 1} selected={i === 1}>{i + 1}</option>)}
+      </select>
+      <p class="field-error" data-error-for="adults"></p>
+    </div>
+    <div class="field">
+      <label for="f-children">{t('form.children')}</label>
+      <select id="f-children" name="children">
+        {Array.from({ length: max - 1 }, (_, i) => <option value={i}>{i}</option>)}
+      </select>
+    </div>
+  </div>
+
+  <fieldset class="pets">
+    <legend><Icon name="paw" size={20} /> {t('form.pets')}</legend>
+    <div class="choices">
+      <label class="choice"><input type="radio" name="pets" value="no" checked /> {t('form.pets.no')}</label>
+      <label class="choice"><input type="radio" name="pets" value="yes" /> {t('form.pets.yes')}</label>
+    </div>
+    <div class="field pets-details">
+      <label for="f-pets-details">{t('form.pets.details')}</label>
+      <input id="f-pets-details" name="petsDetails" maxlength="200" />
+    </div>
+  </fieldset>
+
+  <label class="check check-parking">
+    <input type="checkbox" name="parking" value="yes" />
+    <Icon name="parking" size={20} />
+    <span>{t('form.parking')}</span>
+  </label>
+
+  <div class="field">
+    <label for="f-message">{t('form.message')} <span class="opt">({t('form.optional')})</span></label>
+    <textarea id="f-message" name="message" rows="4" maxlength="2000" placeholder={t('form.message.placeholder')}
+    ></textarea>
+  </div>
+
+  <label class="check">
+    <input type="checkbox" name="privacy" value="yes" required />
+    <span>
+      {t('form.privacy')}{' '}
+      <a href={pathFor('privacy', locale)} target="_blank">{t('form.privacy.link')}</a>
+    </span>
+  </label>
+  <p class="field-error" data-error-for="privacy"></p>
+
+  <div class="cf-turnstile" data-sitekey={SITE.turnstileSiteKey} data-language={locale} data-theme="light" data-size="flexible">
+  </div>
+  <p class="field-error" data-error-for="captcha"></p>
+
+  <button type="submit" class="btn btn-primary btn-block">
+    <Icon name="send" />
+    {t('form.submit')}
+  </button>
+  <p class="form-status" role="status" aria-live="polite"></p>
+</form>
+
+<div id="request-success" class="request-success" tabindex="-1" hidden>
+  <span class="success-icon"><Icon name="check" size={32} /></span>
+  <p>{t('form.success')}</p>
+  <p class="muted">{t('form.orWhatsapp')}</p>
+  <a class="btn btn-wa" href={whatsappUrl(t('wa.message'))} data-wa-dynamic target="_blank" rel="noopener">
+    <Icon name="whatsapp" />
+    {t('cta.whatsapp')}
+  </a>
+</div>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script>
+  const form = document.getElementById('request-form') as HTMLFormElement | null;
+  const success = document.getElementById('request-success');
+
+  if (form && success) {
+    const msg = JSON.parse(form.dataset.messages ?? '{}') as Record<string, string>;
+    const status = form.querySelector<HTMLElement>('.form-status')!;
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement | null;
+    const checkin = field('checkin')!;
+    const checkout = field('checkout')!;
+
+    const isoDay = (d: Date) => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    const addDays = (iso: string, n: number) => {
+      const d = new Date(`${iso}T12:00:00`);
+      d.setDate(d.getDate() + n);
+      return isoDay(d);
+    };
+    const today = isoDay(new Date());
+    checkin.min = today;
+    checkout.min = addDays(today, 1);
+
+    // date precompilate dall'URL (?checkin=2026-12-20&checkout=2026-12-27)
+    const params = new URLSearchParams(location.search);
+    if (params.get('checkin')) checkin.value = params.get('checkin')!;
+    if (params.get('checkout')) checkout.value = params.get('checkout')!;
+
+    checkin.addEventListener('change', () => {
+      if (!checkin.value) return;
+      checkout.min = addDays(checkin.value, 1);
+      if (!checkout.value || checkout.value <= checkin.value) checkout.value = checkout.min;
+    });
+
+    // link WhatsApp con i dati già inseriti
+    const waLinks = document.querySelectorAll<HTMLAnchorElement>('a[data-wa-dynamic]');
+    const updateWhatsapp = () => {
+      const data = new FormData(form);
+      const lines = [msg.wa];
+      if (data.get('checkin')) lines.push(`${msg.checkin}: ${data.get('checkin')}`);
+      if (data.get('checkout')) lines.push(`${msg.checkout}: ${data.get('checkout')}`);
+      lines.push(`${msg.adults}: ${data.get('adults')} · ${msg.children}: ${data.get('children')}`);
+      if (data.get('pets') === 'yes') lines.push(`${msg.pets} ${msg.yes} ${data.get('petsDetails') ?? ''}`.trim());
+      waLinks.forEach((a) => {
+        const url = new URL(a.href);
+        url.searchParams.set('text', lines.join('\n'));
+        a.href = url.toString();
+      });
+    };
+    form.addEventListener('change', updateWhatsapp);
+
+    const clearErrors = () => {
+      form.querySelectorAll('[data-error-for]').forEach((el) => (el.textContent = ''));
+      form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+      status.textContent = '';
+      status.classList.remove('is-error');
+    };
+
+    const showErrors = (errors: Record<string, string>) => {
+      let first: HTMLElement | null = null;
+      for (const [name, text] of Object.entries(errors)) {
+        const slot = form.querySelector(`[data-error-for="${name}"]`);
+        if (slot) slot.textContent = text;
+        const input = field(name);
+        if (input instanceof HTMLElement) {
+          input.setAttribute('aria-invalid', 'true');
+          first ??= input;
+        }
+      }
+      first?.focus();
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearErrors();
+      submit.disabled = true;
+      status.textContent = msg.sending;
+
+      try {
+        const res = await fetch('/api/richiesta', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        const body = (await res.json().catch(() => ({}))) as {
+          message?: string;
+          errors?: Record<string, string>;
+        };
+        if (res.ok) {
+          updateWhatsapp();
+          form.hidden = true;
+          success.hidden = false;
+          success.focus();
+          return;
+        }
+        if (body.errors) showErrors(body.errors);
+        status.textContent = body.message ?? msg.error;
+        status.classList.add('is-error');
+      } catch {
+        status.textContent = msg.network;
+        status.classList.add('is-error');
+      } finally {
+        submit.disabled = false;
+        (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
+      }
+    });
+  }
+</script>
+
+<style>
+  .request-form { display: grid; gap: 1rem; }
+  .row { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
+  .row:has(input[type='email']) { grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .row:has(input[type='email']) { grid-template-columns: 1fr 1fr; } }
+  .field { display: grid; gap: 0.35rem; min-width: 0; }
+  label, legend { font-weight: 700; font-size: 0.92rem; color: var(--c-ink); }
+  .opt { font-weight: 500; color: var(--c-ink-soft); }
+  input:not([type='checkbox'], [type='radio']), select, textarea {
+    width: 100%;
+    min-height: 50px;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid #cfc7b8;
+    border-radius: 10px;
+    background: #fff;
+    color: var(--c-ink);
+    font: 500 16px/1.4 var(--font-sans); /* 16px: niente zoom automatico su iOS */
+    appearance: none;
+  }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235e564d' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-right: 2.5rem;
+  }
+  textarea { min-height: 110px; resize: vertical; }
+  input:focus, select:focus, textarea:focus { outline: 3px solid var(--c-sage); border-color: var(--c-forest); }
+  [aria-invalid='true'] { border-color: #b3261e !important; }
+  .field-error { margin: 0; font-size: 0.85rem; color: #b3261e; font-weight: 600; }
+  .field-error:empty { display: none; }
+
+  fieldset.pets {
+    margin: 0;
+    padding: 1rem;
+    border: 1px solid #e8cfae;
+    border-radius: var(--radius-sm);
+    background: var(--c-tan-soft);
+  }
+  legend { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0 0.35rem; color: var(--c-brown); }
+  .choices { display: flex; gap: 0.6rem; margin-top: 0.25rem; }
+  .choice {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 48px;
+    border-radius: 10px;
+    border: 1px solid #e0c7a6;
+    background: #fff;
+    cursor: pointer;
+  }
+  .choice:has(input:checked) { border-color: var(--c-brown); box-shadow: inset 0 0 0 1px var(--c-brown); }
+  .pets-details { display: none; margin-top: 0.8rem; }
+  .pets:has(input[value='yes']:checked) .pets-details { display: grid; }
+
+  .check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    font-weight: 500;
+    line-height: 1.45;
+    cursor: pointer;
+  }
+  .check input { width: 22px; height: 22px; margin: 0; flex: none; accent-color: var(--c-brown); }
+  input[type='radio'] { width: 20px; height: 20px; margin: 0; accent-color: var(--c-brown); }
+  .check-parking {
+    align-items: center;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-sm);
+    background: var(--c-sage-soft);
+    font-weight: 700;
+    color: var(--c-forest);
+  }
+  .check a { font-weight: 700; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .form-status { margin: 0; min-height: 1.4em; text-align: center; font-weight: 600; color: var(--c-ink-soft); }
+  .form-status.is-error { color: #b3261e; }
+
+  .request-success { text-align: center; display: grid; gap: 0.5rem; justify-items: center; padding-block: 1.5rem; }
+  .request-success p { margin: 0; font-size: 1.1rem; }
+  .request-success p.muted { font-size: 0.95rem; margin-top: 0.5rem; }
+  .request-success .btn { margin-top: 0.5rem; }
+  .success-icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    background: var(--c-sage-soft);
+    color: var(--c-forest);
+  }
+</style>

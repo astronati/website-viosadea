@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Gallery from '../components/Gallery.astro';
+import Lightbox from '../components/Lightbox.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+import { getCopy } from '../content';
+import { photo } from '../data/gallery';
+import type { Locale } from '../i18n/locales';
+import { useTranslations } from '../i18n/utils';
+import { breadcrumbJsonLd } from '../lib/jsonld';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const copy = getCopy(locale);
+const g = copy.gallery;
+---
+
+<Base
+  title={copy.meta.gallery.title}
+  description={copy.meta.gallery.description}
+  locale={locale}
+  pageKey="gallery"
+  image={photo('cucina/cucina-1.jpg').src}
+  jsonLd={[
+    breadcrumbJsonLd(locale, [
+      { key: 'home', name: t('breadcrumb.home') },
+      { key: 'gallery', name: t('nav.gallery') },
+    ]),
+  ]}
+>
+  <PageHeader locale={locale} pageKey="gallery" eyebrow={g.eyebrow} title={g.title} subtitle={g.subtitle} />
+  <section class="section">
+    <div class="container">
+      <Gallery locale={locale} />
+    </div>
+  </section>
+  <FinalCTA locale={locale} title={copy.home.finalTitle} text={copy.home.finalText} />
+  <Lightbox locale={locale} />
+</Base>

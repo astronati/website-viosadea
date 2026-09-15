@@ -1,0 +1,39 @@
+name: Deploy to Cloudflare
+
+# Deploy in produzione a ogni push su main, più trigger manuale.
+# In alternativa: `npm run deploy` da locale (vedi docs/deploy.md).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # storia completa: la sitemap usa la data dell'ultimo commit come <lastmod>
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      # I segreti runtime (TURNSTILE_SECRET) vivono sul Worker, impostati una volta
+      # con `wrangler secret put`: non passano da qui.
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --config dist/server/wrangler.json --message "deploy ${{ github.sha }}"

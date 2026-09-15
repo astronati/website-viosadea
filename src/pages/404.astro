@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import { LANGUAGE_NAME, LOCALES } from '../i18n/locales';
+import { pathFor } from '../i18n/routes';
+import { useTranslations } from '../i18n/utils';
+
+const t = useTranslations('it');
+const en = useTranslations('en');
+---
+
+<Base title={t('notfound.title')} description={t('notfound.text')} locale="it" noindex>
+  <section class="section">
+    <div class="container notfound">
+      <p class="code">404</p>
+      <h1>{t('notfound.title')}</h1>
+      <p class="muted">{t('notfound.text')}</p>
+      <p class="muted" lang="en">{en('notfound.text')}</p>
+      <ul>
+        {
+          LOCALES.map((l) => (
+            <li>
+              <a class="btn btn-outline" href={pathFor('home', l)} lang={l}>
+                {LANGUAGE_NAME[l]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .notfound { text-align: center; max-width: 40rem; }
+  .code { font-family: var(--font-display); font-size: 5rem; line-height: 1; color: var(--c-tan); margin: 0; }
+  ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-top: 1.5rem; }
+</style>

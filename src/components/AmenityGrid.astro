@@ -1,0 +1,58 @@
+---
+import Icon from './Icon.astro';
+import { AMENITIES } from '../data/amenities';
+import type { Locale } from '../i18n/locales';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<ul class="amenities">
+  {
+    AMENITIES.map((a) => (
+      <li class:list={{ 'is-key': a.highlight }}>
+        <span class="amenity-icon">
+          <Icon name={a.icon} size={22} />
+        </span>
+        {a.label[locale]}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .amenities {
+    display: grid;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .amenities li {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: var(--radius-sm);
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .amenity-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--c-bg-alt);
+    color: var(--c-forest);
+  }
+  .amenities li.is-key { background: var(--c-tan-soft); border-color: #e8cfae; color: var(--c-brown); }
+  .amenities li.is-key .amenity-icon { background: var(--c-brown); color: #fff; }
+  @media (min-width: 640px) { .amenities { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 960px) { .amenities { grid-template-columns: repeat(3, 1fr); } }
+</style>

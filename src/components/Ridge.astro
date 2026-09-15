@@ -1,0 +1,33 @@
+---
+// Profilo di montagne decorativo (richiama lo schienale della cucina).
+interface Props {
+  color?: string;
+  class?: string;
+}
+const { color = 'var(--c-bg)', class: className } = Astro.props;
+---
+
+<svg
+  class:list={['ridge', className]}
+  viewBox="0 0 1200 48"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path
+    fill={color}
+    d="M0 48V34l70-14 45 12 70-26 55 22 40-10 60 20 75-30 50 18 45-8 70 22 80-34 55 24 40-12 65 20 70-26 60 20 50-10 70 18 80-30 45 16 55-8v36Z"
+  ></path>
+</svg>
+
+<style>
+  .ridge {
+    display: block;
+    width: 100%;
+    height: clamp(18px, 4vw, 44px);
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    pointer-events: none;
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+import { SITE } from '../consts';
+import { OG_LOCALE, SITE_URL, type Locale } from '../i18n/locales';
+import { pathFor, type PageKey } from '../i18n/routes';
+import { alternates } from '../i18n/utils';
+
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  pageKey?: PageKey;
+  image?: ImageMetadata;
+  jsonLd?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const { title, description, locale, pageKey, image, jsonLd = [], noindex } = Astro.props;
+
+const canonical = new URL(pageKey ? pathFor(pageKey, locale) : Astro.url.pathname, SITE_URL).href;
+const links = pageKey ? alternates(pageKey) : [];
+const xDefault = links.find((l) => l.locale === 'it');
+
+const ogImage = image
+  ? new URL((await getImage({ src: image, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src, SITE_URL).href
+  : new URL('/og-default.jpg', SITE_URL).href;
+
+const fullTitle = title.includes(SITE.name) ? title : `${title} · ${SITE.name}`;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#faf8f2" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+{noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+
+{links.map((l) => <link rel="alternate" hreflang={l.hreflang} href={l.href} />)}
+{xDefault && <link rel="alternate" hreflang="x-default" href={xDefault.href} />}
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:locale" content={OG_LOCALE[locale]} />
+{links.filter((l) => l.locale !== locale).map((l) => <meta property="og:locale:alternate" content={OG_LOCALE[l.locale]} />)}
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+{jsonLd.map((data) => <script is:inline type="application/ld+json" set:html={JSON.stringify(data)} />)}

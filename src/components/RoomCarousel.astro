@@ -1,0 +1,100 @@
+---
+// Home: una card per ambiente, scorrevole con il dito su mobile, griglia su desktop.
+import Photo from './Photo.astro';
+import { photosByRoom } from '../data/gallery';
+import type { PageCopy } from '../content/types';
+import type { Locale } from '../i18n/locales';
+import { pathFor } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  rooms: PageCopy['apartment']['rooms'];
+}
+const { locale, rooms } = Astro.props;
+const cards = rooms
+  .map((r) => ({ ...r, photo: photosByRoom(r.room)[0] }))
+  .filter((r) => r.photo);
+---
+
+<ul class="rooms">
+  {
+    cards.map((card) => (
+      <li>
+        <a href={pathFor('apartment', locale, card.room)} class="room-card">
+          <Photo
+            photo={card.photo}
+            locale={locale}
+            sizes="(min-width: 960px) 30vw, 75vw"
+            widths={[400, 640, 960]}
+          />
+          <span class="room-label">{card.title}</span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .rooms {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 72%;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    list-style: none;
+    padding: 0 var(--gutter) 0.25rem;
+    margin: 0 calc(var(--gutter) * -1);
+    scroll-padding-inline: var(--gutter);
+  }
+  .rooms::-webkit-scrollbar { display: none; }
+  .rooms li { scroll-snap-align: start; }
+  .room-card {
+    position: relative;
+    display: block;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    text-decoration: none;
+  }
+  .room-card :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .room-card::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 0;
+    background: linear-gradient(180deg, transparent, rgba(20, 14, 9, 0.75));
+  }
+  .room-label {
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: 0.9rem;
+    z-index: 1;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.15;
+  }
+  :global(:lang(ru)) .room-label { font-family: var(--font-sans); }
+  .room-card:hover :global(img) { transform: scale(1.04); }
+
+  @media (min-width: 640px) { .rooms { grid-auto-columns: 42%; } }
+  @media (min-width: 960px) {
+    .rooms {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(3, 1fr);
+      overflow: visible;
+      padding: 0;
+      margin: 0;
+      gap: 1.25rem;
+    }
+    .room-card :global(img) { aspect-ratio: 4 / 3; }
+  }
+</style>

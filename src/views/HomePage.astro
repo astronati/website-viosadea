@@ -1,0 +1,223 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import HomeHero from '../components/HomeHero.astro';
+import HighlightBar from '../components/HighlightBar.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import FactsRow from '../components/FactsRow.astro';
+import RoomCarousel from '../components/RoomCarousel.astro';
+import ReviewScores from '../components/ReviewScores.astro';
+import FAQ from '../components/FAQ.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+import { getCopy } from '../content';
+import { photo } from '../data/gallery';
+import type { Locale } from '../i18n/locales';
+import { pathFor } from '../i18n/routes';
+import { useTranslations } from '../i18n/utils';
+import { faqJsonLd, rentalJsonLd } from '../lib/jsonld';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const copy = getCopy(locale);
+const h = copy.home;
+
+const hero = photo('soggiorno/soggiorno-scala.jpg');
+const kitchen = photo('cucina/cucina-tavola.jpg');
+const bedroom = photo('camera-matrimoniale/matrimoniale-1.jpg');
+const entrance = photo('esterno/esterno-2.jpg');
+const village = photo('esterno/vista-piazza.jpg');
+
+const ldImages = await Promise.all(
+  [hero, kitchen, bedroom, entrance].map(async (p) => (await getImage({ src: p.src, width: 1200, format: 'jpg' })).src),
+);
+const jsonLd = [rentalJsonLd(locale, copy.meta.home.description, ldImages), faqJsonLd(h.faq)];
+
+const welcome = [
+  { icon: 'paw', title: h.petsTitle, text: h.petsText },
+  { icon: 'parking', title: h.parkingTitle, text: h.parkingText },
+  { icon: 'ski', title: h.storageTitle, text: h.storageText },
+] as const;
+---
+
+<Base
+  title={copy.meta.home.title}
+  description={copy.meta.home.description}
+  locale={locale}
+  pageKey="home"
+  jsonLd={jsonLd}
+>
+  <HomeHero
+    locale={locale}
+    photo={hero}
+    eyebrow={h.heroEyebrow}
+    title={h.heroTitle}
+    subtitle={h.heroSubtitle}
+  />
+  <HighlightBar locale={locale} />
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">{h.introEyebrow}</p>
+        <h2>{h.introTitle}</h2>
+        {h.introText.map((p) => <p class="muted">{p}</p>)}
+        <FactsRow locale={locale} />
+        <p class="mt-2">
+          <a class="btn btn-outline" href={pathFor('apartment', locale)}>
+            {t('cta.apartment')}
+            <Icon name="arrow" />
+          </a>
+        </p>
+      </div>
+      <div class="collage">
+        <div class="rounded-img collage-tall">
+          <Photo photo={kitchen} locale={locale} sizes="(min-width: 960px) 26vw, 50vw" widths={[400, 640, 960]} />
+        </div>
+        <div class="rounded-img collage-wide">
+          <Photo photo={bedroom} locale={locale} sizes="(min-width: 960px) 26vw, 50vw" widths={[400, 640, 960]} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-sage" id="animali-parcheggio">
+    <div class="container split reverse">
+      <div>
+        <p class="eyebrow">{h.welcomeEyebrow}</p>
+        <h2>{h.welcomeTitle}</h2>
+        <ul class="welcome">
+          {
+            welcome.map((w) => (
+              <li>
+                <span class="welcome-icon">
+                  <Icon name={w.icon} size={28} />
+                </span>
+                <div>
+                  <h3>{w.title}</h3>
+                  <p>{w.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="rounded-img welcome-photo">
+        <Photo photo={entrance} locale={locale} sizes="(min-width: 960px) 40vw, 100vw" widths={[480, 720, 923]} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">{h.roomsEyebrow}</p>
+        <h2>{h.roomsTitle}</h2>
+      </div>
+      <RoomCarousel locale={locale} rooms={copy.apartment.rooms} />
+      <div class="cta-row mt-2">
+        <a class="btn btn-primary" href={pathFor('apartment', locale)}>{t('cta.apartment')}</a>
+        <a class="btn btn-outline" href={pathFor('gallery', locale)}>{t('cta.gallery')}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head center">
+        <h2>{t('reviews.title')}</h2>
+      </div>
+      <ReviewScores locale={locale} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">{h.locationEyebrow}</p>
+        <h2>{h.locationTitle}</h2>
+        <p class="muted">{h.locationText}</p>
+        <ul class="distances">
+          {
+            copy.location.distances.slice(0, 1).concat(copy.location.distances.slice(4, 6)).map((d) => (
+              <li>
+                <Icon name="pin" size={18} />
+                <span>{d.place}</span>
+                <strong>{d.distance}</strong>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-2">
+          <a class="btn btn-outline" href={pathFor('location', locale)}>
+            {t('cta.location')}
+            <Icon name="arrow" />
+          </a>
+        </p>
+      </div>
+      <div class="rounded-img village-photo">
+        <Photo photo={village} locale={locale} sizes="(min-width: 960px) 40vw, 100vw" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head center">
+        <h2>{h.faqTitle}</h2>
+      </div>
+      <FAQ items={h.faq} />
+    </div>
+  </section>
+
+  <FinalCTA locale={locale} title={h.finalTitle} text={h.finalText} />
+</Base>
+
+<style>
+  .collage { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; align-items: end; }
+  .collage-tall :global(img) { aspect-ratio: 3 / 4; }
+  .collage-wide { margin-bottom: 2.5rem; }
+  .collage-wide :global(img) { aspect-ratio: 3 / 4; }
+
+  .welcome { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: 1rem; }
+  .welcome li {
+    display: flex;
+    gap: 1rem;
+    padding: 1.1rem;
+    border-radius: var(--radius);
+    background: var(--c-surface);
+    box-shadow: var(--shadow);
+  }
+  .welcome li:nth-child(-n + 2) { border: 2px solid var(--c-tan); }
+  .welcome h3 { margin-bottom: 0.3rem; }
+  .welcome p { margin: 0; color: var(--c-ink-soft); }
+  .welcome-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--c-brown);
+    color: #fff;
+  }
+  .welcome li:nth-child(3) .welcome-icon { background: var(--c-forest); }
+  .welcome-photo :global(img) { aspect-ratio: 4 / 5; max-height: 640px; }
+
+  .distances { list-style: none; padding: 0; margin: 1.25rem 0 0; display: grid; gap: 0.5rem; }
+  .distances li {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-sm);
+    background: var(--c-bg-alt);
+  }
+  .distances :global(.icon) { color: var(--c-forest); }
+  .distances strong { color: var(--c-brown); white-space: nowrap; }
+  .village-photo :global(img) { aspect-ratio: 4 / 3; }
+</style>

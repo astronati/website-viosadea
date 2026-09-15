@@ -1,0 +1,168 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import FactsRow from '../components/FactsRow.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import AmenityGrid from '../components/AmenityGrid.astro';
+import Lightbox from '../components/Lightbox.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+import { getCopy } from '../content';
+import { photo, photosByRoom } from '../data/gallery';
+import type { Locale } from '../i18n/locales';
+import { useTranslations, type UIKey } from '../i18n/utils';
+import { breadcrumbJsonLd, rentalJsonLd } from '../lib/jsonld';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const copy = getCopy(locale);
+const a = copy.apartment;
+
+const rooms = await Promise.all(
+  a.rooms.map(async (room) => {
+    const photos = photosByRoom(room.room);
+    const fulls = await Promise.all(
+      photos.map((p) => getImage({ src: p.src, width: Math.min(1920, p.src.width), format: 'webp' })),
+    );
+    return { ...room, photos: photos.map((p, i) => ({ photo: p, full: fulls[i].src })) };
+  }),
+);
+
+const cover = photo('soggiorno/soggiorno-scala.jpg');
+const ldImage = (await getImage({ src: cover.src, width: 1200, format: 'jpg' })).src;
+const jsonLd = [
+  rentalJsonLd(locale, copy.meta.apartment.description, [ldImage]),
+  breadcrumbJsonLd(locale, [
+    { key: 'home', name: t('breadcrumb.home') },
+    { key: 'apartment', name: t('nav.apartment') },
+  ]),
+];
+---
+
+<Base
+  title={copy.meta.apartment.title}
+  description={copy.meta.apartment.description}
+  locale={locale}
+  pageKey="apartment"
+  image={cover.src}
+  jsonLd={jsonLd}
+>
+  <PageHeader locale={locale} pageKey="apartment" eyebrow={a.eyebrow} title={a.title} subtitle={a.subtitle}>
+    <FactsRow locale={locale} />
+  </PageHeader>
+
+  <section class="section">
+    <div class="container split">
+      <div class="prose">
+        {a.intro.map((p, i) => <p class:list={{ lead: i === 0 }}>{p}</p>)}
+      </div>
+      <aside class="petpark card" aria-labelledby="petpark-title">
+        <h2 id="petpark-title">{a.petsParkingTitle}</h2>
+        <p><span class="pp-icon"><Icon name="paw" /></span> {a.petsText}</p>
+        <p><span class="pp-icon"><Icon name="parking" /></span> {a.parkingText}</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <h2 class="section-head">{a.roomsTitle}</h2>
+      <div class="rooms">
+        {
+          rooms.map((room) => (
+            <article class="room card" id={room.room}>
+              {room.photos.length > 0 && (
+                <ul class="photo-strip">
+                  {room.photos.map(({ photo: p, full }, i) => (
+                    <li>
+                      <a href={full} data-lightbox={room.room} data-alt={p.alt[locale]} data-caption={room.title}>
+                        <Photo
+                          photo={p}
+                          locale={locale}
+                          sizes="(min-width: 960px) 40vw, 86vw"
+                          widths={[400, 640, 960]}
+                          loading={i === 0 ? 'eager' : 'lazy'}
+                        />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div class="room-body">
+                <h3>{room.title}</h3>
+                <p>{room.text}</p>
+                {room.photos.length > 1 && (
+                  <p class="room-count">
+                    {t('gallery.count', { n: room.photos.length })} · {t(`room.${room.room}` as UIKey)}
+                  </p>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-head">{a.amenitiesTitle}</h2>
+      <AmenityGrid locale={locale} />
+    </div>
+  </section>
+
+  <section class="section section-sage">
+    <div class="container">
+      <h2 class="section-head">{a.rulesTitle}</h2>
+      <dl class="rules">
+        {
+          a.rules.map((r) => (
+            <div>
+              <dt>{r.label}</dt>
+              <dd>{r.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <FinalCTA locale={locale} title={copy.home.finalTitle} text={copy.home.finalText} />
+  <Lightbox locale={locale} />
+</Base>
+
+<style>
+  .petpark { border: 2px solid var(--c-tan); background: var(--c-tan-soft); }
+  .petpark h2 { font-size: clamp(1.35rem, 4vw, 1.7rem); }
+  .petpark p { display: flex; gap: 0.8rem; align-items: flex-start; color: var(--c-ink); font-weight: 600; }
+  .pp-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--c-brown);
+    color: #fff;
+  }
+
+  .rooms { display: grid; gap: 1.25rem; }
+  @media (min-width: 960px) { .rooms { grid-template-columns: 1fr 1fr; } }
+  .room { padding: 0.6rem; scroll-margin-top: calc(var(--header-h) + 1rem); }
+  .room .photo-strip { grid-auto-columns: 100%; }
+  .room:has(.photo-strip li:nth-child(2)) .photo-strip { grid-auto-columns: 88%; }
+  .room-body { padding: 1rem 0.6rem 0.5rem; }
+  .room-body p { color: var(--c-ink-soft); margin-bottom: 0.5rem; }
+  .room-count { font-size: 0.82rem; font-weight: 700; color: var(--c-forest) !important; }
+
+  .rules { display: grid; gap: 0.5rem; margin: 0; }
+  @media (min-width: 640px) { .rules { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 960px) { .rules { grid-template-columns: repeat(3, 1fr); } }
+  .rules div { padding: 0.9rem 1rem; border-radius: var(--radius-sm); background: var(--c-surface); }
+  .rules dt { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; color: var(--c-forest); }
+  .rules dd { margin: 0.15rem 0 0; font-weight: 700; color: var(--c-ink); }
+</style>

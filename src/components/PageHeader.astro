@@ -1,0 +1,47 @@
+---
+// Intestazione delle pagine interne: breadcrumb, titolo e sottotitolo (niente immagine, LCP immediato).
+import Ridge from './Ridge.astro';
+import type { Locale } from '../i18n/locales';
+import { pathFor, type PageKey } from '../i18n/routes';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  pageKey: PageKey;
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+}
+const { locale, pageKey, eyebrow, title, subtitle } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<header class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href={pathFor('home', locale)}>{t('breadcrumb.home')}</a></li>
+        <li aria-current="page">{t(`nav.${pageKey as Exclude<PageKey, 'home'>}`)}</li>
+      </ol>
+    </nav>
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {subtitle && <p class="subtitle">{subtitle}</p>}
+    <slot />
+  </div>
+  <Ridge />
+</header>
+
+<style>
+  .page-header {
+    position: relative;
+    background: var(--c-sage-soft);
+    padding-block: clamp(1.5rem, 5vw, 3rem) clamp(3rem, 8vw, 4.5rem);
+  }
+  .subtitle {
+    max-width: 44ch;
+    font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+    color: var(--c-ink-soft);
+    margin-bottom: 0;
+  }
+</style>

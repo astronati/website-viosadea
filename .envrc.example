@@ -1,0 +1,5 @@
+# Credenziali Cloudflare dell'account DEDICATO a Cèsa Viosadea.
+# Copia in .envrc (git-ignored) e compila, poi: `source .envrc` (o `direnv allow`).
+# Come ottenerli: docs/deploy.md → "Primo setup".
+export CLOUDFLARE_ACCOUNT_ID=
+export CLOUDFLARE_API_TOKEN=

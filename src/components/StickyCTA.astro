@@ -1,0 +1,46 @@
+---
+// Barra azioni fissa in basso su mobile: WhatsApp + richiesta disponibilità.
+import Icon from './Icon.astro';
+import { whatsappUrl } from '../consts';
+import type { Locale } from '../i18n/locales';
+import { pathFor, type PageKey } from '../i18n/routes';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  pageKey?: PageKey;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<div class="sticky-cta">
+  <a class="btn btn-wa" href={whatsappUrl(t('wa.message'))} rel="noopener" target="_blank">
+    <Icon name="whatsapp" />
+    {t('cta.whatsappShort')}
+  </a>
+  <a class="btn btn-primary" href={pathFor('contact', locale, 'richiesta')}>
+    <Icon name="calendar" />
+    {t('cta.requestShort')}
+  </a>
+</div>
+
+<style>
+  .sticky-cta {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 0.6rem;
+    padding: 0.6rem var(--gutter) calc(0.6rem + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--c-bg) 92%, transparent);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--c-line);
+    box-shadow: 0 -8px 24px -16px rgba(47, 42, 38, 0.35);
+  }
+  .sticky-cta .btn { padding-inline: 0.75rem; font-size: 0.95rem; }
+  @media (min-width: 960px) {
+    .sticky-cta { display: none; }
+  }
+</style>

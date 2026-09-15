@@ -1,0 +1,140 @@
+---
+import logo from '../assets/brand/logo.svg';
+import Icon from './Icon.astro';
+import { SITE, airbnbUrl, bookingUrl, whatsappUrl } from '../consts';
+import { LANGUAGE_NAME, type Locale } from '../i18n/locales';
+import { pathFor, type PageKey } from '../i18n/routes';
+import { alternates, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  pageKey?: PageKey;
+}
+const { locale, pageKey } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+const explore = (['home', 'apartment', 'gallery', 'location', 'contact'] as const).map((key) => ({
+  href: pathFor(key, locale),
+  label: t(`nav.${key}`),
+}));
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <img src={logo.src} alt={SITE.name} width={150} height={61} class="footer-logo" loading="lazy" />
+      <p>{t('footer.tagline')}</p>
+      <ul class="footer-badges">
+        <li><Icon name="paw" size={18} /> {t('badge.pets')}</li>
+        <li><Icon name="parking" size={18} /> {t('badge.parking')}</li>
+      </ul>
+    </div>
+
+    <nav aria-label={t('footer.explore')}>
+      <h2>{t('footer.explore')}</h2>
+      <ul>
+        {explore.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div>
+      <h2>{t('footer.book')}</h2>
+      <ul>
+        <li><a href={pathFor('contact', locale, 'richiesta')}>{t('cta.request')}</a></li>
+        <li>
+          <a href={whatsappUrl(t('wa.message'))} rel="noopener" target="_blank">
+            <Icon name="whatsapp" size={16} /> WhatsApp
+          </a>
+        </li>
+        <li><a href={bookingUrl(locale)} rel="noopener" target="_blank">Booking.com</a></li>
+        <li><a href={airbnbUrl(locale)} rel="noopener" target="_blank">Airbnb</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2>{t('nav.language')}</h2>
+      <ul>
+        {
+          alternates(pageKey ?? 'home').map((l) => (
+            <li>
+              <a href={l.path} hreflang={l.hreflang} lang={l.locale} aria-current={l.locale === locale ? 'true' : undefined}>
+                {LANGUAGE_NAME[l.locale]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer-legal">
+    <p>
+      <strong>{SITE.name}</strong> · {SITE.address.locality} ({SITE.address.province}) · {SITE.address.region}
+    </p>
+    <p>
+      {t('footer.cin')} <strong>{SITE.cin}</strong> · {t('footer.cipat')} <strong>{SITE.cipat}</strong>
+    </p>
+    <p>
+      © {year} {SITE.name} · {t('footer.rights')} · <a href={pathFor('privacy', locale)}>{t('nav.privacy')}</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--c-footer);
+    color: #e9e1d6;
+    padding-top: clamp(2.5rem, 8vw, 4rem);
+    font-size: 0.95rem;
+  }
+  .footer-grid { display: grid; gap: 2rem; grid-template-columns: 1fr 1fr; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-logo { height: 58px; width: auto; margin-bottom: 1rem; }
+  .footer-brand p { max-width: 34ch; color: #cfc4b6; }
+  .site-footer h2 {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-tan);
+    margin-bottom: 0.8rem;
+  }
+  .site-footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.15rem; }
+  .site-footer a {
+    color: #f4ede4;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 40px;
+  }
+  .site-footer a:hover { color: var(--c-tan); }
+  .site-footer a[aria-current] { color: var(--c-tan); }
+  .footer-badges { display: flex !important; flex-wrap: wrap; gap: 0.5rem !important; }
+  .footer-badges li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(212, 163, 115, 0.16);
+    color: #f4ede4;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .footer-legal {
+    margin-top: 2.5rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 0.82rem;
+    color: #b9ad9f;
+  }
+  .footer-legal p { margin: 0 0 0.35rem; }
+  .footer-legal strong { color: #e9e1d6; font-weight: 700; }
+  .footer-legal a { min-height: 0; text-decoration: underline; }
+
+  @media (min-width: 960px) {
+    .footer-grid { grid-template-columns: 1.6fr 1fr 1fr 1fr; }
+    .footer-brand { grid-column: auto; }
+  }
+</style>

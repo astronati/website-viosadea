@@ -1,0 +1,5 @@
+# Copia in .dev.vars per lo sviluppo locale (`npm run preview`).
+# In produzione: npx wrangler secret put TURNSTILE_SECRET
+#
+# Chiave di test Turnstile "passa sempre" (https://developers.cloudflare.com/turnstile/troubleshooting/testing/)
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA

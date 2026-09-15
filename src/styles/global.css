@@ -1,0 +1,234 @@
+/* =========================================================
+   Cèsa Viosadea — stili globali (mobile first)
+   ========================================================= */
+@import '@fontsource-variable/manrope';
+@import '@fontsource-variable/fraunces';
+
+:root {
+  /* palette: salvia/sabbia del brand storico, marrone legno per titoli e CTA */
+  --c-bg: #faf8f2;
+  --c-bg-alt: #f1f2e6;
+  --c-surface: #ffffff;
+  --c-sage: #ccd5ae;
+  --c-sage-soft: #e9edc9;
+  --c-forest: #3d5443;
+  --c-tan: #d4a373;
+  --c-tan-soft: #f3e6d6;
+  --c-brown: #582b01;
+  --c-brown-hover: #7a3d05;
+  --c-ink: #2f2a26;
+  --c-ink-soft: #5e564d;
+  --c-line: #e4dfd2;
+  --c-wa: #0f7a40;
+  --c-wa-hover: #0b6634;
+  --c-footer: #2f2419;
+
+  --font-display: 'Fraunces Variable', 'Manrope Variable', Georgia, serif;
+  --font-sans: 'Manrope Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --maxw: 72rem;
+  --maxw-prose: 42rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --shadow: 0 1px 2px rgba(47, 42, 38, 0.05), 0 10px 30px -14px rgba(47, 42, 38, 0.22);
+  --shadow-lg: 0 24px 60px -24px rgba(47, 42, 38, 0.35);
+  --space: clamp(3rem, 9vw, 6rem);
+  --header-h: 64px;
+  --sticky-h: 0px;
+}
+
+/* sotto i 960px c'è la barra CTA fissa in basso */
+@media (max-width: 959.98px) {
+  :root { --sticky-h: calc(68px + env(safe-area-inset-bottom)); }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+/* `hidden` deve vincere su qualsiasi display dei componenti */
+[hidden] { display: none !important; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--c-bg);
+  color: var(--c-ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  padding-bottom: var(--sticky-h);
+}
+@media (min-width: 640px) { body { font-size: 1.0625rem; } }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--c-brown);
+  font-weight: 560;
+  margin: 0 0 0.45em;
+  text-wrap: balance;
+}
+/* Fraunces non ha il cirillico: in russo titoli tutti in Manrope, coerenti */
+:lang(ru) :is(h1, h2, h3, h4) { font-family: var(--font-sans); font-weight: 700; letter-spacing: -0.02em; }
+
+h1 { font-size: clamp(2.1rem, 8vw, 4.2rem); font-weight: 520; }
+h2 { font-size: clamp(1.7rem, 5.5vw, 2.7rem); }
+h3 { font-size: clamp(1.15rem, 3.6vw, 1.45rem); font-weight: 600; }
+
+p { margin: 0 0 1.1em; }
+strong { font-weight: 700; }
+
+a { color: var(--c-brown); text-underline-offset: 3px; }
+a:hover { color: var(--c-brown-hover); }
+
+img, svg { max-width: 100%; }
+img { height: auto; display: block; }
+/* <Picture> di Astro: il wrapper non deve influire sul layout, conta solo l'<img> */
+picture { display: contents; }
+
+/* strisce di foto scorrevoli con il dito (scroll-snap, nessuna libreria) */
+.photo-strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 86%;
+  gap: 0.6rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.photo-strip::-webkit-scrollbar { display: none; }
+.photo-strip > * { scroll-snap-align: start; }
+.photo-strip a, .photo-strip img { display: block; width: 100%; height: 100%; }
+.photo-strip img { aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-sm); }
+
+:focus-visible { outline: 3px solid var(--c-tan); outline-offset: 2px; border-radius: 4px; }
+
+/* ---- layout ---- */
+.container { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+.section { padding-block: var(--space); }
+.section-alt { background: var(--c-bg-alt); }
+.section-sage { background: var(--c-sage-soft); }
+.section-head { max-width: 44rem; margin-bottom: clamp(1.75rem, 5vw, 2.75rem); }
+.section-head.center { margin-inline: auto; text-align: center; }
+.section-head p { color: var(--c-ink-soft); font-size: 1.05em; }
+
+.prose { max-width: var(--maxw-prose); }
+.prose p, .prose li { color: var(--c-ink-soft); }
+.prose p.lead { font-size: 1.15em; color: var(--c-ink); }
+.prose h2 { margin-top: 1.6em; }
+.prose h3 { margin-top: 1.4em; }
+.prose ul { padding-left: 1.2rem; }
+.prose li { margin-bottom: 0.35em; }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--c-forest);
+  margin: 0 0 0.9rem;
+}
+.eyebrow::before { content: ''; width: 1.5rem; height: 2px; border-radius: 2px; background: var(--c-tan); }
+
+/* ---- bottoni: min 48px di altezza, pensati per il pollice ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 48px;
+  padding: 0.75rem 1.4rem;
+  border-radius: 999px;
+  font: 700 1rem/1.2 var(--font-sans);
+  text-decoration: none;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(0.98); }
+.btn .icon { flex: none; width: 1.25em; height: 1.25em; }
+.btn-primary { background: var(--c-brown); color: #fff; }
+.btn-primary:hover { background: var(--c-brown-hover); color: #fff; }
+.btn-wa { background: var(--c-wa); color: #fff; }
+.btn-wa:hover { background: var(--c-wa-hover); color: #fff; }
+.btn-outline { background: transparent; color: var(--c-brown); border-color: currentColor; }
+.btn-outline:hover { background: var(--c-tan-soft); }
+.btn-light { background: #fff; color: var(--c-brown); }
+.btn-light:hover { background: var(--c-tan-soft); color: var(--c-brown); }
+.btn-ghost { background: rgba(255, 255, 255, 0.14); color: #fff; border-color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(6px); }
+.btn-ghost:hover { background: rgba(255, 255, 255, 0.26); color: #fff; }
+.btn-block { width: 100%; }
+
+.cta-row { display: flex; flex-direction: column; gap: 0.75rem; }
+@media (min-width: 520px) {
+  .cta-row { flex-direction: row; flex-wrap: wrap; }
+  .cta-row.center { justify-content: center; }
+}
+
+/* ---- card e griglie ---- */
+.grid { display: grid; gap: 1rem; }
+@media (min-width: 640px) {
+  .grid-2 { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+}
+@media (min-width: 960px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+
+.card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius);
+  padding: clamp(1.25rem, 4vw, 1.9rem);
+  box-shadow: var(--shadow);
+}
+.card p:last-child { margin-bottom: 0; }
+
+.split { display: grid; gap: clamp(1.75rem, 5vw, 4rem); align-items: center; }
+@media (min-width: 960px) {
+  .split { grid-template-columns: 1fr 1fr; }
+  .split.reverse > :first-child { order: 2; }
+}
+
+.rounded-img { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+.rounded-img img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ---- breadcrumb ---- */
+.breadcrumb { font-size: 0.85rem; color: var(--c-ink-soft); margin-bottom: 0.75rem; }
+.breadcrumb a { color: inherit; }
+.breadcrumb ol { list-style: none; display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0; margin: 0; }
+.breadcrumb li + li::before { content: '›'; margin-right: 0.35rem; opacity: 0.6; }
+
+/* ---- utility ---- */
+.text-center { text-align: center; }
+.muted { color: var(--c-ink-soft); }
+.mt-2 { margin-top: 2rem; }
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: absolute; left: 1rem; top: -100px; z-index: 200;
+  background: var(--c-brown); color: #fff; padding: 0.7rem 1rem; border-radius: 8px;
+}
+.skip-link:focus { top: 0.75rem; color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

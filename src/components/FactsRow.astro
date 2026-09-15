@@ -1,0 +1,40 @@
+---
+import Icon from './Icon.astro';
+import { SITE } from '../consts';
+import type { Locale } from '../i18n/locales';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const a = SITE.apartment;
+const facts = [
+  { icon: 'size', text: t('facts.size', { n: a.sizeM2 }) },
+  { icon: 'users', text: t('facts.guests', { n: a.maxGuests }) },
+  { icon: 'bed', text: t('facts.bedrooms', { n: a.bedrooms }) },
+  { icon: 'bath', text: t('facts.bathrooms', { n: a.bathrooms }) },
+] as const;
+---
+
+<ul class="facts">
+  {facts.map((f) => <li><Icon name={f.icon} size={18} /> {f.text}</li>)}
+</ul>
+
+<style>
+  .facts { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 1.25rem 0 0; }
+  .facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--c-ink);
+  }
+  .facts :global(.icon) { color: var(--c-forest); }
+</style>

@@ -1,0 +1,250 @@
+---
+import logo from '../assets/brand/logo.svg';
+import Icon from './Icon.astro';
+import { LANGUAGE_NAME, type Locale } from '../i18n/locales';
+import { pathFor, type PageKey } from '../i18n/routes';
+import { alternates, useTranslations } from '../i18n/utils';
+import { SITE } from '../consts';
+
+interface Props {
+  locale: Locale;
+  pageKey?: PageKey;
+}
+const { locale, pageKey } = Astro.props;
+const t = useTranslations(locale);
+
+const nav = (['apartment', 'gallery', 'location', 'contact'] as const).map((key) => ({
+  key,
+  href: pathFor(key, locale),
+  label: t(`nav.${key}`),
+}));
+const languages = alternates(pageKey ?? 'home');
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href={pathFor('home', locale)} class="brand" aria-label={`${SITE.name} – ${t('nav.home')}`}>
+      <img src={logo.src} alt="" width={132} height={54} class="brand-logo" />
+    </a>
+
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+
+    <details class="lang">
+      <summary aria-label={t('nav.language')}>
+        <Icon name="globe" size={18} />
+        <span>{locale.toUpperCase()}</span>
+        <Icon name="down" size={16} />
+      </summary>
+      <ul>
+        {
+          languages.map((l) => (
+            <li>
+              <a
+                href={l.path}
+                hreflang={l.hreflang}
+                lang={l.locale}
+                aria-current={l.locale === locale ? 'true' : undefined}
+              >
+                <span class="lang-code">{l.locale.toUpperCase()}</span>
+                {LANGUAGE_NAME[l.locale]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </details>
+
+    <label for="nav-toggle" class="nav-burger">
+      <span class="burger-lines" aria-hidden="true"></span>
+      <span class="visually-hidden">{t('nav.menu')}</span>
+    </label>
+
+    <nav class="site-nav" aria-label={t('nav.menu')}>
+      {
+        nav.map((item) => (
+          <a href={item.href} aria-current={item.key === pageKey ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+      <a href={pathFor('contact', locale, 'richiesta')} class="btn btn-primary nav-cta">
+        {t('cta.request')}
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Chiude il selettore lingua cliccando fuori o con Esc.
+  const lang = document.querySelector<HTMLDetailsElement>('.lang');
+  document.addEventListener('click', (e) => {
+    if (lang?.open && !lang.contains(e.target as Node)) lang.open = false;
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lang?.open) lang.open = false;
+  });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--c-bg) 88%, transparent);
+    backdrop-filter: saturate(160%) blur(12px);
+    border-bottom: 1px solid var(--c-line);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: var(--header-h);
+  }
+  .brand { display: flex; align-items: center; margin-right: auto; padding-block: 0.35rem; }
+  .brand-logo { height: 46px; width: auto; }
+
+  /* selettore lingua */
+  .lang { position: relative; }
+  .lang summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 44px;
+    padding: 0 0.7rem;
+    border: 1px solid var(--c-line);
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--c-ink);
+    cursor: pointer;
+    background: var(--c-surface);
+  }
+  .lang summary::-webkit-details-marker { display: none; }
+  .lang[open] summary { border-color: var(--c-tan); }
+  .lang ul {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.4rem);
+    min-width: 11rem;
+    margin: 0;
+    padding: 0.4rem;
+    list-style: none;
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg);
+    z-index: 70;
+  }
+  .lang a {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-height: 44px;
+    padding: 0 0.75rem;
+    border-radius: 8px;
+    color: var(--c-ink);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .lang a:hover { background: var(--c-bg-alt); }
+  .lang a[aria-current] { background: var(--c-sage-soft); }
+  .lang-code { font-size: 0.72rem; font-weight: 800; color: var(--c-forest); width: 1.4rem; }
+
+  /* burger (CSS-only) */
+  .nav-toggle { position: absolute; opacity: 0; pointer-events: none; }
+  .nav-burger {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    border-radius: 999px;
+  }
+  .nav-toggle:focus-visible ~ .nav-burger { outline: 3px solid var(--c-tan); }
+  .burger-lines, .burger-lines::before, .burger-lines::after {
+    display: block;
+    width: 24px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--c-ink);
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .burger-lines { position: relative; }
+  .burger-lines::before, .burger-lines::after { content: ''; position: absolute; left: 0; }
+  .burger-lines::before { top: -7px; }
+  .burger-lines::after { top: 7px; }
+  .nav-toggle:checked ~ .nav-burger .burger-lines { background: transparent; }
+  .nav-toggle:checked ~ .nav-burger .burger-lines::before { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle:checked ~ .nav-burger .burger-lines::after { transform: translateY(-7px) rotate(-45deg); }
+
+  .site-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem var(--gutter) 1.5rem;
+    background: var(--c-bg);
+    border-bottom: 1px solid var(--c-line);
+    box-shadow: var(--shadow-lg);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  }
+  .nav-toggle:checked ~ .site-nav { visibility: visible; opacity: 1; transform: none; }
+  .site-nav > a:not(.btn) {
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    border-bottom: 1px solid var(--c-line);
+    color: var(--c-ink);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  .site-nav > a[aria-current='page'] { color: var(--c-brown); }
+  .nav-cta { margin-top: 1.1rem; }
+
+  @media (min-width: 960px) {
+    .header-inner { gap: 1.25rem; }
+    .brand-logo { height: 52px; }
+    .nav-burger { display: none; }
+    .site-nav {
+      position: static;
+      flex-direction: row;
+      align-items: center;
+      gap: 1.6rem;
+      padding: 0;
+      background: none;
+      border: 0;
+      box-shadow: none;
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+      order: -1;
+      margin-left: auto;
+    }
+    .brand { margin-right: 0; order: -2; }
+    .site-nav > a:not(.btn) {
+      min-height: 0;
+      border: 0;
+      font-size: 0.95rem;
+      position: relative;
+    }
+    .site-nav > a:not(.btn):hover { color: var(--c-brown); }
+    .site-nav > a[aria-current='page']::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -6px;
+      height: 2px;
+      background: var(--c-tan);
+      border-radius: 2px;
+    }
+    .nav-cta { margin-top: 0; min-height: 44px; padding-inline: 1.1rem; font-size: 0.92rem; }
+  }
+</style>

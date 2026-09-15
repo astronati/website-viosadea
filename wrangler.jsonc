@@ -1,0 +1,40 @@
+{
+  // Config Cloudflare Worker — source of truth. L'adapter Astro la legge a build
+  // time e scrive il config deployabile in `dist/server/wrangler.json` (il sito ha
+  // una route server: /api/richiesta). Deploy con `npm run deploy` (docs/deploy.md).
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "viosadea",
+  "compatibility_date": "2026-07-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // URL *.workers.dev per testare prima del cutover del dominio.
+  "workers_dev": true,
+
+  // Domini custom: scommentare SOLO quando la zona viosadea.com è Active su
+  // Cloudflare (vedi docs/dns-migration.md). Prima, il deploy fallirebbe.
+  // "routes": [
+  //   { "pattern": "www.viosadea.com", "custom_domain": true },
+  //   { "pattern": "viosadea.com", "custom_domain": true }
+  // ],
+
+  // Invio email delle richieste di disponibilità (Cloudflare Email Service).
+  // Il dominio mittente va abilitato: `npx wrangler email sending enable viosadea.com`.
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "allowed_sender_addresses": ["richieste@viosadea.com"]
+    }
+  ],
+
+  // Variabili non segrete. I segreti (TURNSTILE_SECRET) si impostano con
+  // `npx wrangler secret put` — vedi .dev.vars.example. La site key pubblica
+  // di Turnstile sta in src/consts.ts (le pagine sono statiche).
+  "vars": {
+    "CONTACT_TO": "viosadea@gmail.com",
+    "MAIL_FROM": "richieste@viosadea.com"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+}

@@ -1,0 +1,12 @@
+# Vecchi URL WordPress -> nuovo sito (301 permanenti)
+/privacy-cookie-policy /privacy/ 301
+/privacy-cookie-policy/ /privacy/ 301
+/en/privacy-cookie-policy /en/privacy/ 301
+/en/privacy-cookie-policy/ /en/privacy/ 301
+/sitemap.xml /sitemap-index.xml 301
+/wp-sitemap.xml /sitemap-index.xml 301
+/wp-login.php / 301
+/wp-content/uploads/* /galleria/ 301
+/wp-admin/* / 301
+/feed/* / 301
+/author/* / 301

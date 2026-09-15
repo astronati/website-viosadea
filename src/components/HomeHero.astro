@@ -1,0 +1,162 @@
+---
+// Hero della home: la stessa foto su mobile e desktop.
+// Su schermi verticali la foto orizzontale è ritagliata (object-fit: cover), quindi
+// `sizes` chiede una larghezza maggiore per non perdere nitidezza.
+import { getImage } from 'astro:assets';
+import Icon from './Icon.astro';
+import Ridge from './Ridge.astro';
+import type { Photo } from '../data/gallery';
+import { AMENITIES } from '../data/amenities';
+import { whatsappUrl } from '../consts';
+import type { Locale } from '../i18n/locales';
+import { pathFor } from '../i18n/routes';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  photo: Photo;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+}
+const { locale, photo, eyebrow, title, subtitle } = Astro.props;
+const t = useTranslations(locale);
+
+const widths = [640, 960, 1280, 1600, 1920, 2400].filter((w) => w <= photo.src.width);
+const sizes = '(max-aspect-ratio: 1/1) 150vh, 100vw';
+
+async function srcset(format: 'avif' | 'webp') {
+  const images = await Promise.all(widths.map((width) => getImage({ src: photo.src, width, format })));
+  return images.map((img, i) => `${img.src} ${widths[i]}w`).join(', ');
+}
+const [avif, webp, fallback] = await Promise.all([
+  srcset('avif'),
+  srcset('webp'),
+  getImage({ src: photo.src, width: 1600, format: 'jpg' }),
+]);
+
+const [pets, parking] = AMENITIES.filter((a) => a.highlight);
+---
+
+<section class="hero">
+  <picture>
+    <source type="image/avif" srcset={avif} sizes={sizes} />
+    <source type="image/webp" srcset={webp} sizes={sizes} />
+    <img
+      src={fallback.src}
+      alt={photo.alt[locale]}
+      width={photo.src.width}
+      height={photo.src.height}
+      class="hero-img"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </picture>
+  <div class="hero-shade" aria-hidden="true"></div>
+
+  <div class="container hero-content">
+    <ul class="hero-badges">
+      <li><Icon name="paw" size={18} /> {pets.label[locale]}</li>
+      <li><Icon name="parking" size={18} /> {parking.label[locale]}</li>
+    </ul>
+    <p class="eyebrow hero-eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+    <p class="hero-sub">{subtitle}</p>
+    <div class="cta-row">
+      <a class="btn btn-light" href={pathFor('contact', locale, 'richiesta')}>
+        <Icon name="calendar" />
+        {t('cta.request')}
+      </a>
+      <a class="btn btn-ghost" href={whatsappUrl(t('wa.message'))} target="_blank" rel="noopener">
+        <Icon name="whatsapp" />
+        {t('cta.whatsapp')}
+      </a>
+    </div>
+    <p class="hero-note"><Icon name="clock" size={16} /> {t('cta.reply')}</p>
+  </div>
+  <Ridge />
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-end;
+    min-height: min(calc(100svh - var(--header-h) - var(--sticky-h)), 820px);
+    padding-block: 5rem clamp(3rem, 8vw, 5rem);
+    color: #fff;
+    overflow: hidden;
+  }
+  .hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* su mobile il ritaglio verticale resta centrato sulla scala in legno */
+    object-position: 64% 50%;
+    z-index: -2;
+  }
+  .hero-shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(25, 18, 12, 0.2) 0%, rgba(25, 18, 12, 0.3) 35%, rgba(20, 14, 9, 0.85) 100%);
+  }
+  .hero-content { position: relative; }
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.1rem;
+  }
+  .hero-badges li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(250, 248, 242, 0.95);
+    color: var(--c-brown);
+    font-weight: 700;
+    font-size: 0.85rem;
+    line-height: 1.2;
+    box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.5);
+  }
+  .hero-badges :global(.icon) { color: var(--c-forest); flex: none; }
+  .hero-eyebrow { color: #f3dcc0; margin-bottom: 0.6rem; }
+  .hero h1 {
+    color: #fff;
+    max-width: 17ch;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
+  }
+  .hero-sub {
+    max-width: 46ch;
+    font-size: clamp(1.02rem, 2.6vw, 1.3rem);
+    color: #f7f1e8;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+    margin-bottom: 1.5rem;
+  }
+  .hero-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 1rem 0 0;
+    font-size: 0.85rem;
+    color: #efe6da;
+  }
+  @media (min-width: 960px) {
+    .hero { min-height: min(88vh, 860px); align-items: center; }
+    .hero-img { object-position: 50% 50%; }
+    .hero-shade {
+      background:
+        linear-gradient(90deg, rgba(20, 14, 9, 0.78) 0%, rgba(20, 14, 9, 0.45) 45%, rgba(20, 14, 9, 0.05) 75%),
+        linear-gradient(180deg, transparent 60%, rgba(20, 14, 9, 0.35) 100%);
+    }
+    .hero-badges li { font-size: 0.92rem; }
+  }
+</style>

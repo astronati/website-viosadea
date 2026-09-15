@@ -1,0 +1,100 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ContactForm from '../components/ContactForm.astro';
+import ReviewScores from '../components/ReviewScores.astro';
+import Icon from '../components/Icon.astro';
+import { SITE, whatsappUrl } from '../consts';
+import { getCopy } from '../content';
+import type { Locale } from '../i18n/locales';
+import { useTranslations } from '../i18n/utils';
+import { breadcrumbJsonLd } from '../lib/jsonld';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const copy = getCopy(locale);
+const c = copy.contact;
+const phoneDisplay = SITE.whatsapp.replace(/^\+39(\d{3})(\d{3})(\d+)$/, '+39 $1 $2 $3');
+---
+
+<Base
+  title={copy.meta.contact.title}
+  description={copy.meta.contact.description}
+  locale={locale}
+  pageKey="contact"
+  jsonLd={[
+    breadcrumbJsonLd(locale, [
+      { key: 'home', name: t('breadcrumb.home') },
+      { key: 'contact', name: t('nav.contact') },
+    ]),
+  ]}
+>
+  <PageHeader locale={locale} pageKey="contact" eyebrow={c.eyebrow} title={c.title} subtitle={c.subtitle} />
+
+  <section class="section">
+    <div class="container contact-grid">
+      <div class="card form-card" id="richiesta">
+        <h2>{c.formTitle}</h2>
+        <p class="muted">{c.formText}</p>
+        <ContactForm locale={locale} />
+      </div>
+
+      <aside class="aside">
+        <div class="card wa-card">
+          <h2>{c.directTitle}</h2>
+          <p>{c.directText}</p>
+          <a class="btn btn-wa btn-block" href={whatsappUrl(t('wa.message'))} data-wa-dynamic target="_blank" rel="noopener">
+            <Icon name="whatsapp" />
+            {t('cta.whatsapp')}
+          </a>
+          <p class="wa-number">{phoneDisplay}</p>
+        </div>
+
+        <div class="card">
+          <h2>{c.goodToKnowTitle}</h2>
+          <ul class="good">
+            {
+              c.goodToKnow.map((item, i) => (
+                <li class:list={{ 'is-key': i < 2 }}>
+                  <Icon name={i === 0 ? 'paw' : i === 1 ? 'parking' : i === 2 ? 'clock' : 'check'} size={20} />
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head center">
+        <h2>{c.portalsTitle}</h2>
+        <p>{c.portalsText}</p>
+      </div>
+      <ReviewScores locale={locale} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact-grid { display: grid; gap: 1.25rem; align-items: start; }
+  @media (min-width: 960px) {
+    .contact-grid { grid-template-columns: 1.6fr 1fr; gap: 2rem; }
+    .aside { position: sticky; top: calc(var(--header-h) + 1.5rem); }
+  }
+  .form-card { scroll-margin-top: calc(var(--header-h) + 0.5rem); }
+  .form-card h2, .aside h2 { font-size: clamp(1.35rem, 4vw, 1.75rem); }
+  .aside { display: grid; gap: 1.25rem; }
+  .wa-card { background: #eaf5ee; border-color: #cde6d6; }
+  .wa-number { text-align: center; margin: 0.75rem 0 0; font-weight: 700; color: var(--c-wa); letter-spacing: 0.02em; }
+  .good { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+  .good li { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; }
+  .good :global(.icon) { flex: none; color: var(--c-forest); }
+  .good li.is-key { color: var(--c-brown); }
+  .good li.is-key :global(.icon) { color: var(--c-brown); }
+</style>

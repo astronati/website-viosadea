@@ -1,0 +1,57 @@
+---
+import Icon from './Icon.astro';
+import { SITE, airbnbUrl, bookingUrl } from '../consts';
+import type { Locale } from '../i18n/locales';
+import { formatNumber, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const cards = [
+  { name: 'Booking.com', ...SITE.reviews.booking, href: bookingUrl(locale), cta: t('cta.booking') },
+  { name: 'Airbnb', ...SITE.reviews.airbnb, href: airbnbUrl(locale), cta: t('cta.airbnb') },
+];
+---
+
+<ul class="scores">
+  {
+    cards.map((c) => (
+      <li class="score card">
+        <p class="score-name">{c.name}</p>
+        <p class="score-value">
+          <strong>{formatNumber(c.score, locale)}</strong>
+          <span>{t('reviews.outOf', { n: c.max })}</span>
+        </p>
+        <p class="stars" aria-hidden="true">
+          {Array.from({ length: 5 }, () => (
+            <Icon name="star" size={18} />
+          ))}
+        </p>
+        <a class="btn btn-outline btn-block" href={c.href} target="_blank" rel="noopener">
+          {c.cta}
+          <Icon name="external" size={16} />
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .scores { display: grid; gap: 1rem; list-style: none; padding: 0; margin: 0; }
+  @media (min-width: 640px) { .scores { grid-template-columns: 1fr 1fr; } }
+  .score { text-align: center; }
+  .score-name { font-weight: 800; letter-spacing: 0.02em; color: var(--c-ink-soft); margin-bottom: 0.25rem; }
+  .score-value { margin: 0; display: flex; align-items: baseline; justify-content: center; gap: 0.4rem; }
+  .score-value strong {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 10vw, 3.6rem);
+    line-height: 1;
+    color: var(--c-brown);
+  }
+  :global(:lang(ru)) .score-value strong { font-family: var(--font-sans); }
+  .score-value span { color: var(--c-ink-soft); font-weight: 600; }
+  .stars { display: flex; justify-content: center; gap: 2px; color: var(--c-tan); margin: 0.5rem 0 1.1rem; }
+</style>
