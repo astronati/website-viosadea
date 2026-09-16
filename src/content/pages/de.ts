@@ -227,7 +227,7 @@ const de: PageCopy = {
       {
         title: 'Dienstleister',
         body: [
-          'Die Website wird bei Cloudflare gehostet, das auch den E-Mail-Versand und den Spamschutz (Turnstile) bereitstellt. Cloudflare ist unter dem EU-U.S. Data Privacy Framework zertifiziert.',
+          'Die Website wird bei Cloudflare gehostet, das auch den Spamschutz des Formulars (Turnstile) bereitstellt und unter dem EU-U.S. Data Privacy Framework zertifiziert ist. Über das Formular gesendete Anfragen erreichen uns per E-Mail über Brevo (Frankreich).',
           'Wenn Sie uns über WhatsApp kontaktieren, gilt zusätzlich die Datenschutzerklärung von WhatsApp. Links zu Booking.com und Airbnb führen zu Websites mit eigenen Datenschutzerklärungen.',
         ],
       },

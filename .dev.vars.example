@@ -1,5 +1,11 @@
 # Copia in .dev.vars per lo sviluppo locale (`npm run preview`).
-# In produzione: npx wrangler secret put TURNSTILE_SECRET
+# In produzione i segreti si impostano sul Worker:
+#   npm run cf:secret:turnstile
+#   npm run cf:secret:brevo
 #
 # Chiave di test Turnstile "passa sempre" (https://developers.cloudflare.com/turnstile/troubleshooting/testing/)
 TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+
+# API key Brevo (SMTP & API → API Keys). Vuota = l'API risponde 503 senza inviare.
+# Con una chiave vera le email partono davvero anche in locale: usa destinatari tuoi.
+BREVO_API_KEY=

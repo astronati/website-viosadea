@@ -1,4 +1,4 @@
-# Primo setup — Cloudflare (una tantum)
+# Primo setup — Cloudflare e Brevo (una tantum)
 
 Passi da fare **una volta sola**, in ordine, per portare online viosadea.com come
 **Worker Cloudflare con static assets**. Dopo, i rilasci sono un comando o un push:
@@ -10,15 +10,17 @@ Valori di questo progetto: Worker **`viosadea`**, dominio **`viosadea.com`**
 ## Come funziona
 - Le pagine sono **prerenderizzate** (statiche). Solo `/api/richiesta` (modulo
   contatti) gira on-demand nel Worker (`prerender = false`).
+- Il modulo è protetto da **Cloudflare Turnstile** e invia l'email con l'API
+  transazionale di **Brevo** (piano gratuito).
 - L'adapter `@astrojs/cloudflare` genera a build time il config deployabile
   `dist/server/wrangler.json`, usato da tutti gli script.
-- L'infrastruttura è config-as-code: [`../wrangler.jsonc`](../wrangler.jsonc)
-  (Worker, domini, binding email, variabili) e [`../astro.config.mjs`](../astro.config.mjs).
+- Tutto funziona sul piano **Free** di Cloudflare.
 
 | Configurazione | Dove | Tipo |
 |---|---|---|
-| `CONTACT_TO` destinatario richieste | `wrangler.jsonc` → `vars` | pubblica |
-| `MAIL_FROM` mittente (`richieste@viosadea.com`) | `wrangler.jsonc` → `vars` + `allowed_sender_addresses` | pubblica |
+| `CONTACT_TO` destinatario richieste (`viosadea@gmail.com`) | `wrangler.jsonc` → `vars` | pubblica |
+| `MAIL_FROM` mittente (`no-reply@viosadea.com`, mittente attivo su Brevo) | `wrangler.jsonc` → `vars` | pubblica |
+| `BREVO_API_KEY` | `npm run cf:secret:brevo` | **segreto** sul Worker |
 | `TURNSTILE_SECRET` | `npm run cf:secret:turnstile` | **segreto** sul Worker |
 | Site key Turnstile | `src/consts.ts` → `turnstileSiteKey` | pubblica |
 | Token Web Analytics (opzionale) | `src/consts.ts` → `cfBeaconToken` | pubblica |
@@ -30,17 +32,20 @@ Valori di questo progetto: Worker **`viosadea`**, dominio **`viosadea.com`**
 - [ ] 2. Account ID + API token → `.envrc`
 - [ ] 3. Primo deploy su `workers.dev`
 - [ ] 4. Turnstile (anti-spam del modulo)
-- [ ] 5. Dominio su Cloudflare (migrazione DNS da Netsons)
-- [ ] 6. Email Sending + test del modulo
+- [ ] 5. Brevo: API key e test del modulo
+- [ ] 6. Dominio su Cloudflare (migrazione DNS da Netsons)
 - [ ] 7. Collegamento del dominio al Worker
 - [ ] 8. GitHub Actions
 - [ ] 9. Web Analytics + Google Search Console
+
+Brevo (step 5) non dipende dal DNS: il modulo si può attivare e provare già su
+`workers.dev`, prima della migrazione.
 
 ---
 
 ## 1. Account Cloudflare dedicato
 Crea un account su <https://dash.cloudflare.com/sign-up> dedicato alla struttura
-(es. con `viosadea@gmail.com`), come fatto per attidiati. Piano **Free**.
+(es. con `viosadea@gmail.com`), come per attidiati. Piano **Free**.
 
 Nel dashboard: *Workers & Pages* → scegli il sottodominio `workers.dev` dell'account
 (es. `viosadea`): il sito di prova sarà `https://viosadea.<sottodominio>.workers.dev`.
@@ -50,9 +55,8 @@ Nel dashboard: *Workers & Pages* → scegli il sottodominio `workers.dev` dell'a
 - **API token**: *My Profile → API Tokens → Create Token → Custom token*:
   - *Account* → **Workers Scripts: Edit**
   - *Account* → **Workers KV Storage: Edit** (l'adapter crea un KV `SESSION` al primo deploy)
-  - *Account* → **Email Sending: Edit** (per `npm run cf:email:*`)
   - *Zone* → **Workers Routes: Edit**, **DNS: Edit** — *Zone Resources*: `viosadea.com`
-    (se la zona non esiste ancora, aggiungi questi permessi modificando il token dopo lo step 5)
+    (se la zona non esiste ancora, aggiungi questi permessi modificando il token dopo lo step 6)
 
 Salva le credenziali **solo** nel file locale `.envrc` (git-ignored):
 
@@ -69,7 +73,7 @@ npm run cf:whoami            # ⚠️ DEVE mostrare l'Account ID dell'account de
 
 ## 3. Primo deploy su `workers.dev`
 Il Worker **nasce con il primo deploy**, non va creato a mano. Il blocco `routes`
-in `wrangler.jsonc` resta **commentato** finché la zona non è Active (step 5),
+in `wrangler.jsonc` resta **commentato** finché la zona non è Active (step 6),
 altrimenti il deploy fallisce.
 
 ```sh
@@ -80,14 +84,14 @@ npm run deploy       # astro build && wrangler deploy --config dist/server/wrang
 ```
 
 Apri l'URL `workers.dev` stampato a fine deploy e rivedi il sito su telefono.
-Fino allo step 6 il modulo contatti risponde con errore e invita a usare WhatsApp:
-è previsto (l'invio email non è ancora attivo).
+Finché non completi lo step 5 il modulo contatti risponde con errore e invita a
+usare WhatsApp: è previsto.
 
 ## 4. Turnstile (anti-spam del modulo)
 1. Dashboard → **Turnstile → Add widget**: nome `viosadea`, modalità **Managed**,
    hostname: `viosadea.com`, `www.viosadea.com`, `viosadea.<sottodominio>.workers.dev`.
 2. **Site key** → `turnstileSiteKey` in [`../src/consts.ts`](../src/consts.ts)
-   (sostituisce la chiave di test `1x00000000000000000000AA`).
+   (sostituisce la chiave di test `1x00000000000000000000AA`, che fa passare tutti).
 3. **Secret key** → sul Worker (una volta, persiste tra i deploy):
    ```sh
    npm run cf:secret:turnstile      # incolla il secret quando richiesto
@@ -96,77 +100,78 @@ Fino allo step 6 il modulo contatti risponde con errore e invita a usare WhatsAp
 
 In locale `.dev.vars` usa le chiavi di test "passa sempre" (`.dev.vars.example`).
 
-## 5. Dominio su Cloudflare
+## 5. Brevo: API key e test del modulo
+Il dominio `viosadea.com` risulta già collegato a un account Brevo (record
+`brevo-code` e DKIM `mail._domainkey` nel DNS). Serve accedere a **quell'account**.
+
+1. **Dominio autenticato**: Brevo → *Senders, Domains & Dedicated IPs → Domains*:
+   `viosadea.com` deve risultare **Authenticated**. Se non lo è, segui la procedura
+   di Brevo: aggiungerà/controllerà `brevo-code` e il DKIM. Se il DNS è già su
+   Cloudflare, i record vanno inseriti lì.
+   Il mittente `MAIL_FROM` (`no-reply@viosadea.com`) deve essere tra i mittenti
+   attivi in *Senders, Domains & Dedicated IPs → Senders* (oggi ci sono
+   `info@viosadea.com` e `no-reply@viosadea.com`). Per cambiarlo, aggiungilo prima lì.
+2. **API key**: Brevo → *SMTP & API → API Keys → Generate a new API key* (nome
+   `viosadea-worker`). Salvala sul Worker:
+   ```sh
+   npm run cf:secret:brevo          # incolla la chiave quando richiesto
+   ```
+3. ⚠️ **IP autorizzati**: Brevo può bloccare le chiamate API da IP sconosciuti e
+   attiva il blocco da solo dopo 30 giorni senza IP nuovi. Il Worker Cloudflare
+   **non ha IP fissi**, quindi il modulo smetterebbe di funzionare. In Brevo →
+   *Settings → Security → Authorized IPs* lascia **disattivato** "Block unknown IP
+   addresses". Se Brevo manda un'email di IP bloccato, disattivalo di nuovo.
+4. **Test** (nessun nuovo deploy necessario: i segreti sono già sul Worker):
+   - invia una richiesta dal modulo su `workers.dev`;
+   - deve arrivare a **viosadea@gmail.com** con oggetto `Richiesta gg/mm/aaaa → …`;
+     "Rispondi" scrive direttamente all'ospite. La prima volta controlla lo spam.
+   - Se non arriva: `npm run cf:logs`, riprova e cerca le righe `[richiesta]`
+     (l'errore riporta codice e messaggio di Brevo, es. chiave errata o mittente non valido).
+   - In Brevo → *Transactional → Logs* vedi ogni email inviata.
+
+Limiti del piano gratuito Brevo: **300 email al giorno**, più che sufficienti per
+un modulo contatti. Per cambiare destinatario: `CONTACT_TO` in `wrangler.jsonc` →
+`npm run deploy`.
+
+## 6. Dominio su Cloudflare
 Segui **[`dns-migration.md`](dns-migration.md)**: aggiunta della zona, verifica dei
 record importati (la posta resta su Netsons), SPF, cambio nameserver da Netsons.
 Attendi lo stato **Active** della zona prima di continuare.
 
-## 6. Email Sending + test del modulo
-Serve la zona Active su Cloudflare ("You must be using Cloudflare DNS").
-
-```sh
-npm run cf:email:enable     # wrangler email sending enable viosadea.com
-npm run cf:email:dns        # mostra i record richiesti e il loro stato
-```
-
-(In alternativa: dashboard → *Compute & AI → Email Service → Email Sending →
-Onboard Domain*.)
-
-L'onboarding aggiunge record sul sottodominio **`cf-bounce.viosadea.com`** (MX per
-i bounce, SPF, DKIM): **non tocca gli MX della radice**, la posta Netsons continua
-a funzionare.
-
-> ⚠️ **DMARC**: Cloudflare propone anche un TXT su `_dmarc.viosadea.com`, ma il
-> dominio ne ha già uno (`v=DMARC1; p=none; rua=mailto:rua@dmarc.brevo.com`).
-> Deve esistercene **uno solo**: tieni quello esistente e non crearne un secondo
-> (due record DMARC invalidano entrambi).
-
-Test:
-1. Invia una richiesta dal modulo su `workers.dev` (o sul dominio).
-2. Deve arrivare a **viosadea@gmail.com** con oggetto `Richiesta gg/mm/aaaa → …`;
-   "Rispondi" scrive direttamente all'ospite. La prima volta controlla lo spam e
-   segna "Non è spam".
-3. Se non arriva: `npm run cf:logs` e riprova — cerca le righe `[richiesta]`.
-
-Per cambiare destinatario: `CONTACT_TO` in `wrangler.jsonc` → `npm run deploy`.
-Gli account nuovi partono con una quota giornaliera prudente che cresce nel
-tempo: ampiamente sufficiente per un modulo contatti.
+> ⚠️ Non attivare **Email Routing** di Cloudflare sul dominio: prenderebbe il
+> controllo degli MX e la posta Netsons smetterebbe di arrivare.
 
 ## 7. Collegamento del dominio al Worker
-1. In `wrangler.jsonc` **scommenta** il blocco `routes` (`www.viosadea.com` e
-   `viosadea.com`) → `npm run deploy`.
-   In alternativa dal dashboard: *Workers & Pages → viosadea → Settings → Domains &
-   Routes → Add → Custom Domain*. Se chiede di sostituire record A/CNAME esistenti
-   (il vecchio WordPress) → conferma.
-2. Tocca **solo** apex e `www`. MX, `mail`, `cpanel`, TXT/DKIM/DMARC restano come sono.
-3. **Redirect apex → www**: *Rules → Redirect Rules → template "Redirect from root
-   to WWW"* (301, conserva path e query).
-4. Verifiche finali: vedi [`dns-migration.md`](dns-migration.md) step 7.
+Cloudflare **non** crea un Custom Domain su un nome che ha già un record DNS.
+Procedura completa in [`dns-migration.md`](dns-migration.md) step 5, in breve:
+
+1. *DNS → Records*: **elimina solo** il record A `viosadea.com` e il CNAME `www` (il
+   vecchio WordPress). MX, `mail`, `webmail`, `cpanel`, TXT, SRV restano.
+2. In `wrangler.jsonc` **scommenta** `routes` → `npm run deploy`
+   (oppure dashboard: *Workers & Pages → viosadea → Settings → Domains & Routes →
+   Add → Custom Domain* per `www.viosadea.com` e `viosadea.com`).
+3. **Redirect apex → www**: *Rules → Redirect Rules → Create rule* — Wildcard pattern
+   `https://viosadea.com/*` → `https://www.viosadea.com/${1}`, 301, *Preserve query
+   string* attivo.
+4. Verifiche finali: [`dns-migration.md`](dns-migration.md) step 5 punto 4.
 
 ## 8. GitHub Actions
 Il workflow [`../.github/workflows/deploy.yml`](../.github/workflows/deploy.yml)
-deploya a ogni push su `main` (e con *Run workflow* manuale).
+deploya a ogni push su `main` (e con *Run workflow* manuale). Repository:
+`astronati/website-viosadea`.
 
-1. Su GitHub crea un repository **privato** vuoto (es. `viosadea`), senza README.
-2. Dalla cartella del progetto:
-   ```sh
-   git add -A && git commit -m "Sito Astro Cèsa Viosadea"
-   git remote add origin git@github.com:<utente>/viosadea.git
-   git push -u origin main
-   ```
-3. *Repo → Settings → Secrets and variables → Actions → New repository secret*:
+1. *Repo → Settings → Secrets and variables → Actions → New repository secret*:
    | Secret | Valore |
    |---|---|
    | `CLOUDFLARE_API_TOKEN` | lo stesso token di `.envrc` |
    | `CLOUDFLARE_ACCOUNT_ID` | lo stesso Account ID |
-4. *Actions → Deploy to Cloudflare → Run workflow* per il primo giro.
+2. *Actions → Deploy to Cloudflare → Run workflow* per il primo giro (o un push su `main`).
 
-`TURNSTILE_SECRET` **non** va su GitHub: vive sul Worker (step 4).
+`BREVO_API_KEY` e `TURNSTILE_SECRET` **non** vanno su GitHub: vivono sul Worker.
 
 ## 9. Web Analytics + Google Search Console
 - **Web Analytics** (senza cookie, nessun banner): dashboard → *Analytics & Logs →
-  Web Analytics → Add a site* → `www.viosadea.com`. Con il sito sul dominio proxato
-  l'iniezione è automatica.
+  Web Analytics → Add a site* → `www.viosadea.com`.
 - **Search Console**: la proprietà `viosadea.com` è già verificata via TXT
   (`google-site-verification`, conservato nella migrazione). *Sitemaps* → invia
   `sitemap-index.xml`. Poi aggiorna il link al sito su Booking.com, Airbnb e

@@ -52,9 +52,9 @@ export const SITE = {
   // può attivare dal dashboard senza token; altrimenti incolla qui il token.
   cfBeaconToken: '',
 
-  // Site key pubblica del widget Turnstile. Quella di test "passa sempre":
-  // sostituirla con la chiave reale creata nel dashboard (docs/deploy.md).
-  turnstileSiteKey: '1x00000000000000000000AA',
+  // Site key pubblica del widget Turnstile "viosadea" (modalità Managed).
+  // Il secret corrispondente è un segreto del Worker: npm run cf:secret:turnstile.
+  turnstileSiteKey: '0x4AAAAAAE4Jo2jb3LMUrla5',
 } as const;
 
 export function bookingUrl(locale: keyof typeof SITE.booking.lang): string {

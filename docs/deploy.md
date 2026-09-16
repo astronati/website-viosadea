@@ -17,12 +17,15 @@ npm run check          # type-check: errori TS e chiavi di traduzione mancanti
 npm run deploy:dry     # build completa + verifica del bundle, senza pubblicare
 ```
 
-Anteprima del Worker buildato (modulo incluso, chiavi Turnstile di test):
+Anteprima del Worker buildato (modulo incluso):
 
 ```sh
 cp -n .dev.vars.example .dev.vars
 npm run preview        # http://localhost:8787
 ```
+
+Con `BREVO_API_KEY` vuota in `.dev.vars` il modulo si ferma dopo la validazione e
+risponde con errore. Con una chiave vera le email **partono davvero**.
 
 > ⚠️ **Ferma `npm run dev` prima di `build`/`preview`/`deploy`** (`npx astro dev stop`):
 > la build riscrive la cache di Vite in `node_modules/.vite` e il dev server in
@@ -51,7 +54,8 @@ npm run deploy
 
 ## Dopo il rilascio
 - Apri la home e una pagina interna in un'altra lingua.
-- Invia una richiesta di prova dal modulo e verifica l'arrivo su viosadea@gmail.com.
+- Invia una richiesta di prova dal modulo e verifica l'arrivo su viosadea@gmail.com
+  (anche in Brevo → *Transactional → Logs*).
 - Log in tempo reale del Worker: `npm run cf:logs`.
 
 ## Versioni e rollback
@@ -71,17 +75,19 @@ Oppure ripubblica da un commit buono: `git checkout <sha> && npm run deploy`
 | `npm run dev` | sviluppo su http://localhost:4321 (grafica e testi; il modulo contatti **non** si prova qui) |
 | `npm run check` | type-check |
 | `npm run deploy:dry` | build + deploy simulato |
-| `npm run preview` | build + Worker locale su :8787 — **qui si prova il modulo contatti** (Turnstile di test, email simulata) |
+| `npm run preview` | build + Worker locale su :8787 — **qui si prova il modulo contatti** |
 | `npm run deploy` | build + pubblicazione |
 | `npm run cf:whoami` | account Cloudflare attivo |
 | `npm run cf:logs` | log live del Worker |
 | `npm run cf:deployments` | versioni pubblicate |
 | `npm run cf:secret:turnstile` | imposta/ruota il secret Turnstile |
-| `npm run cf:email:enable` | abilita Email Sending su viosadea.com (una tantum, zona Active) |
-| `npm run cf:email:dns` | stato dei record DNS di Email Sending |
+| `npm run cf:secret:brevo` | imposta/ruota l'API key Brevo |
 | `npm run import:photos` | riscarica le foto dal vecchio WordPress (già eseguito, una tantum) |
 
 ## Cosa cambiare dove
 - **Testi, foto, dati della struttura**: vedi la tabella nel [README](../README.md).
 - **Destinatario delle richieste**: `CONTACT_TO` in `wrangler.jsonc` → rilascia.
+- **API key Brevo ruotata**: `npm run cf:secret:brevo` (effetto immediato, nessun deploy).
 - **Chiave Turnstile ruotata**: site key in `src/consts.ts` + `npm run cf:secret:turnstile` → rilascia.
+- **Il modulo smette di inviare dopo settimane**: quasi sempre Brevo ha attivato il
+  blocco degli IP sconosciuti → [setup-cloudflare.md](setup-cloudflare.md) step 5 punto 3.

@@ -229,7 +229,7 @@ const it: PageCopy = {
       {
         title: 'Fornitori',
         body: [
-          'Il sito è ospitato su Cloudflare, che fornisce anche l’invio delle email e la protezione anti-spam (Turnstile). Cloudflare aderisce all’EU-U.S. Data Privacy Framework.',
+          'Il sito è ospitato su Cloudflare, che fornisce anche la protezione anti-spam del modulo (Turnstile) e aderisce all’EU-U.S. Data Privacy Framework. Le richieste inviate con il modulo ci arrivano via email tramite Brevo (Francia).',
           'Se ci contatti su WhatsApp si applica anche l’informativa di WhatsApp. I link a Booking.com e Airbnb portano a siti con proprie informative.',
         ],
       },

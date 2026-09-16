@@ -17,21 +17,16 @@
   //   { "pattern": "viosadea.com", "custom_domain": true }
   // ],
 
-  // Invio email delle richieste di disponibilità (Cloudflare Email Service).
-  // Il dominio mittente va abilitato: `npx wrangler email sending enable viosadea.com`.
-  "send_email": [
-    {
-      "name": "EMAIL",
-      "allowed_sender_addresses": ["richieste@viosadea.com"]
-    }
-  ],
-
-  // Variabili non segrete. I segreti (TURNSTILE_SECRET) si impostano con
-  // `npx wrangler secret put` — vedi .dev.vars.example. La site key pubblica
-  // di Turnstile sta in src/consts.ts (le pagine sono statiche).
+  // Variabili non segrete del modulo richieste (/api/richiesta), inviato con Brevo.
+  // MAIL_FROM deve appartenere a un dominio autenticato su Brevo (viosadea.com).
+  // I segreti si impostano sul Worker, mai qui:
+  //   npm run cf:secret:brevo       (BREVO_API_KEY)
+  //   npm run cf:secret:turnstile   (TURNSTILE_SECRET)
+  // In locale: .dev.vars (vedi .dev.vars.example). La site key pubblica di
+  // Turnstile sta in src/consts.ts (le pagine sono statiche).
   "vars": {
     "CONTACT_TO": "viosadea@gmail.com",
-    "MAIL_FROM": "richieste@viosadea.com"
+    "MAIL_FROM": "no-reply@viosadea.com"
   },
 
   "observability": {

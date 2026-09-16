@@ -18,8 +18,7 @@
     "deploy:dry": "astro build && wrangler deploy --config dist/server/wrangler.json --dry-run",
     "cf:whoami": "wrangler whoami",
     "cf:secret:turnstile": "wrangler secret put TURNSTILE_SECRET --name viosadea",
-    "cf:email:enable": "wrangler email sending enable viosadea.com",
-    "cf:email:dns": "wrangler email sending dns get viosadea.com",
+    "cf:secret:brevo": "wrangler secret put BREVO_API_KEY --name viosadea",
     "cf:logs": "wrangler tail viosadea",
     "cf:deployments": "wrangler deployments list --name viosadea",
     "import:photos": "node scripts/import-wp-media.mjs"

@@ -227,7 +227,7 @@ const pl: PageCopy = {
       {
         title: 'Dostawcy usług',
         body: [
-          'Strona jest hostowana w Cloudflare, który zapewnia również wysyłkę e-maili i ochronę antyspamową (Turnstile). Cloudflare uczestniczy w programie EU-U.S. Data Privacy Framework.',
+          'Strona jest hostowana w Cloudflare, który zapewnia również ochronę antyspamową formularza (Turnstile) i uczestniczy w programie EU-U.S. Data Privacy Framework. Zapytania wysłane przez formularz trafiają do nas e-mailem za pośrednictwem Brevo (Francja).',
           'Jeśli kontaktujesz się z nami przez WhatsApp, obowiązuje także polityka prywatności WhatsApp. Linki do Booking.com i Airbnb prowadzą do stron z własnymi politykami.',
         ],
       },

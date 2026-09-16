@@ -5,26 +5,17 @@ import { LANGUAGE_NAME, isLocale, type Locale } from '../../i18n/locales';
 import { useTranslations } from '../../i18n/utils';
 
 // Eseguito on-demand nel Worker: valida la richiesta, verifica Turnstile e
-// invia l'email al proprietario con Cloudflare Email Service (binding EMAIL).
+// invia l'email al proprietario tramite l'API transazionale di Brevo.
 export const prerender = false;
 
-interface SendEmail {
-  send(message: {
-    to: string | string[];
-    from: { email: string; name?: string };
-    replyTo?: string;
-    subject: string;
-    text: string;
-    html?: string;
-  }): Promise<{ messageId: string }>;
-}
-
 interface RuntimeEnv {
-  EMAIL?: SendEmail;
+  BREVO_API_KEY?: string;
   CONTACT_TO?: string;
   MAIL_FROM?: string;
   TURNSTILE_SECRET?: string;
 }
+
+const BREVO_ENDPOINT = 'https://api.brevo.com/v3/smtp/email';
 
 const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), {
@@ -54,6 +45,30 @@ async function verifyTurnstile(secret: string, token: string, ip: string | null)
   } catch (err) {
     console.error('[richiesta] Turnstile non raggiungibile', (err as Error).message);
     return false;
+  }
+}
+
+interface BrevoEmail {
+  sender: { email: string; name?: string };
+  to: { email: string; name?: string }[];
+  replyTo?: { email: string; name?: string };
+  subject: string;
+  htmlContent: string;
+  textContent: string;
+  tags?: string[];
+}
+
+/** Invia con Brevo. Successo = HTTP 201; altrimenti lancia con codice e messaggio di Brevo. */
+async function sendWithBrevo(apiKey: string, email: BrevoEmail): Promise<void> {
+  const res = await fetch(BREVO_ENDPOINT, {
+    method: 'POST',
+    headers: { 'api-key': apiKey, 'content-type': 'application/json', accept: 'application/json' },
+    body: JSON.stringify(email),
+    signal: AbortSignal.timeout(10_000),
+  });
+  if (res.status !== 201) {
+    const detail = await res.text().catch(() => '');
+    throw new Error(`Brevo HTTP ${res.status} ${detail.slice(0, 300)}`);
   }
 }
 
@@ -123,8 +138,8 @@ export const POST: APIRoute = async ({ request }) => {
     console.warn('[richiesta] TURNSTILE_SECRET non configurato: verifica anti-spam saltata');
   }
 
-  if (!runtime.EMAIL || !runtime.CONTACT_TO || !runtime.MAIL_FROM) {
-    console.error('[richiesta] configurazione email mancante (binding EMAIL, CONTACT_TO o MAIL_FROM)');
+  if (!runtime.BREVO_API_KEY || !runtime.CONTACT_TO || !runtime.MAIL_FROM) {
+    console.error('[richiesta] configurazione email mancante (BREVO_API_KEY, CONTACT_TO o MAIL_FROM)');
     return json({ message: t('form.network') }, 503);
   }
 
@@ -163,17 +178,17 @@ ${phoneDigits.length >= 8 ? `<p><a href="https://wa.me/${phoneDigits}">Scrivi al
 </body></html>`;
 
   try {
-    await runtime.EMAIL.send({
-      to: runtime.CONTACT_TO,
-      from: { email: runtime.MAIL_FROM, name: `${SITE.name} – sito web` },
-      replyTo: data.email,
+    await sendWithBrevo(runtime.BREVO_API_KEY, {
+      sender: { email: runtime.MAIL_FROM, name: `${SITE.name} – sito web` },
+      to: [{ email: runtime.CONTACT_TO }],
+      replyTo: { email: data.email, name: data.name },
       subject: `Richiesta ${itDate(data.checkin)} → ${itDate(data.checkout)} · ${data.name}${data.pets ? ' · 🐾' : ''}`,
-      text,
-      html,
+      htmlContent: html,
+      textContent: text,
+      tags: ['richiesta-sito'],
     });
   } catch (err) {
-    const e = err as { code?: string; message?: string };
-    console.error('[richiesta] invio email fallito', e.code, e.message);
+    console.error('[richiesta] invio email fallito', (err as Error).message);
     return json({ message: t('form.network') }, 502);
   }
 

@@ -227,7 +227,7 @@ const en: PageCopy = {
       {
         title: 'Service providers',
         body: [
-          'The website is hosted on Cloudflare, which also provides email delivery and spam protection (Turnstile). Cloudflare participates in the EU-U.S. Data Privacy Framework.',
+          'The website is hosted on Cloudflare, which also provides the form’s spam protection (Turnstile) and participates in the EU-U.S. Data Privacy Framework. Requests sent through the form reach us by email via Brevo (France).',
           'If you contact us on WhatsApp, WhatsApp’s privacy policy also applies. Links to Booking.com and Airbnb lead to websites with their own policies.',
         ],
       },
