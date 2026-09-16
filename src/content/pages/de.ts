@@ -48,9 +48,9 @@ const de: PageCopy = {
     petsTitle: 'Haustiere willkommen, ohne Aufpreis',
     petsText:
       'Ihr Hund ist herzlich willkommen, und wir berechnen keine zusätzlichen Kosten. Spaziergänge am Avisio und Höhenwege beginnen direkt im Dorf.',
-    parkingTitle: 'Kostenloser Privatparkplatz',
+    parkingTitle: 'Kostenloser Privatparkplatz, auf Anfrage',
     parkingText:
-      'In der Hochsaison ist ein Parkplatz im Fassatal schwer zu finden. Bei uns ist der Privatparkplatz kostenlos und im Aufenthalt inbegriffen: ankommen, Gepäck ausladen und das Auto bis zur Abreise stehen lassen.',
+      'In der Hochsaison ist ein Parkplatz im Fassatal schwer zu finden. Bei uns ist der Privatparkplatz kostenlos und im Aufenthalt inbegriffen: ankommen, Gepäck ausladen und das Auto bis zur Abreise stehen lassen. Bitte reservieren Sie ihn zusammen mit Ihrem Aufenthalt: Geben Sie es in der Anfrage an, wir halten ihn für Sie frei.',
     storageTitle: 'Ski- und Fahrradkeller',
     storageText: 'Im Keller ist Platz für Ski, Skischuhe und Fahrräder – so bleibt die Wohnung warm und ordentlich.',
     roomsEyebrow: 'Die Ferienwohnung',
@@ -67,7 +67,7 @@ const de: PageCopy = {
       },
       {
         q: 'Ist ein Parkplatz inklusive?',
-        a: 'Ja, die Wohnung verfügt über einen kostenlosen Privatparkplatz, der im Aufenthalt inbegriffen ist. Eine Reservierung ist nicht nötig.',
+        a: 'Ja, und er ist kostenlos. Er muss allerdings zusammen mit dem Aufenthalt reserviert werden: Geben Sie es in der Anfrage an, wir halten ihn für Sie frei.',
       },
       {
         q: 'Für wie viele Personen ist die Wohnung geeignet?',
@@ -135,14 +135,14 @@ const de: PageCopy = {
     amenitiesTitle: 'Ausstattung',
     petsParkingTitle: 'Haustiere und Parkplatz',
     petsText: 'Haustiere sind erlaubt, und für unsere vierbeinigen Freunde fallen keine zusätzlichen Gebühren an.',
-    parkingText: 'Der Privatparkplatz ist kostenlos und im Aufenthalt inbegriffen: keine Reservierung, keine Zusatzkosten.',
+    parkingText: 'Der Privatparkplatz ist kostenlos und wird zusammen mit dem Aufenthalt reserviert: Geben Sie es einfach in der Anfrage an, wir halten ihn für Sie frei.',
     rulesTitle: 'Gut zu wissen',
     rules: [
       { label: 'Check-in', value: '16:00 – 20:00 Uhr' },
       { label: 'Check-out', value: '08:00 – 10:00 Uhr' },
       { label: 'Gäste', value: 'Bis zu 4' },
       { label: 'Haustiere', value: 'Willkommen, ohne Aufpreis' },
-      { label: 'Parkplatz', value: 'Privat und kostenlos' },
+      { label: 'Parkplatz', value: 'Privat und kostenlos, auf Anfrage' },
       { label: 'Rauchen', value: 'Nichtraucherwohnung' },
     ],
   },
@@ -179,7 +179,7 @@ const de: PageCopy = {
       'Wanderwege für jedes Niveau, Berghütten, Klettersteige und der Radweg durch das Tal. Und Ihr Hund kann mitkommen.',
     arrivalTitle: 'Anreise',
     arrivalText:
-      'Mit dem Auto: Brennerautobahn A22, Ausfahrt Neumarkt/Auer aus dem Süden oder Bozen Nord aus dem Norden, dann Richtung Fassatal bis Campitello. Bei der Ankunft erwartet Sie der kostenlose Privatparkplatz.',
+      'Mit dem Auto: Brennerautobahn A22, Ausfahrt Neumarkt/Auer aus dem Süden oder Bozen Nord aus dem Norden, dann Richtung Fassatal bis Campitello. Bei der Ankunft erwartet Sie der kostenlose Privatparkplatz, den wir auf Anfrage reservieren.',
   },
 
   contact: {
@@ -195,7 +195,7 @@ const de: PageCopy = {
     goodToKnowTitle: 'Gut zu wissen',
     goodToKnow: [
       'Haustiere willkommen, ohne Aufpreis',
-      'Kostenloser Privatparkplatz inklusive',
+      'Kostenloser Privatparkplatz, auf Anfrage',
       'Check-in 16–20 Uhr · Check-out 8–10 Uhr',
       'Bettwäsche und Handtücher inklusive',
     ],

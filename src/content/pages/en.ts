@@ -48,9 +48,9 @@ const en: PageCopy = {
     petsTitle: 'Pets welcome, no extra charge',
     petsText:
       'Your dog is welcome and there is no additional fee. Walks along the Avisio stream and mountain trails start right from the village.',
-    parkingTitle: 'Free private parking',
+    parkingTitle: 'Free private parking, on request',
     parkingText:
-      'In high season, finding a parking space in Val di Fassa is not easy. Our private parking is free and included in your stay: arrive, unload your luggage and leave the car until you go home.',
+      'In high season, finding a parking space in Val di Fassa is not easy. Our private parking is free and included in your stay: arrive, unload your luggage and leave the car until you go home. Book it together with your stay: mention it in your request and we will keep it for you.',
     storageTitle: 'Ski and bike storage',
     storageText: 'The cellar has room for skis, boots and bikes, so the apartment stays warm and tidy.',
     roomsEyebrow: 'The apartment',
@@ -67,7 +67,7 @@ const en: PageCopy = {
       },
       {
         q: 'Is parking included?',
-        a: 'Yes, the apartment has free private parking, included in your stay. No booking needed.',
+        a: 'Yes, and it is free. It has to be booked together with your stay: mention it in your availability request and we will reserve it for you.',
       },
       {
         q: 'How many guests can the apartment accommodate?',
@@ -135,14 +135,14 @@ const en: PageCopy = {
     amenitiesTitle: 'What you will find',
     petsParkingTitle: 'Pets and parking',
     petsText: 'Pets are welcome and there is no extra charge for your four-legged companions.',
-    parkingText: 'Private parking is free and included in your stay: no booking, no extra cost.',
+    parkingText: 'Private parking is free and is booked together with your stay: mention it in your request and we will reserve it for you.',
     rulesTitle: 'Good to know',
     rules: [
       { label: 'Check-in', value: '4:00 pm – 8:00 pm' },
       { label: 'Check-out', value: '8:00 am – 10:00 am' },
       { label: 'Guests', value: 'Up to 4' },
       { label: 'Pets', value: 'Welcome, no extra charge' },
-      { label: 'Parking', value: 'Private and free' },
+      { label: 'Parking', value: 'Private and free, on request' },
       { label: 'Smoking', value: 'Non-smoking apartment' },
     ],
   },
@@ -179,7 +179,7 @@ const en: PageCopy = {
       'Trails for every level, mountain huts, via ferratas and the cycle path running through the valley. And your dog can come along.',
     arrivalTitle: 'Getting here',
     arrivalText:
-      'By car: A22 Brenner motorway, exit Ora/Egna from the south or Bolzano Nord from the north, then follow signs for Val di Fassa to Campitello. Free private parking awaits you on arrival.',
+      'By car: A22 Brenner motorway, exit Ora/Egna from the south or Bolzano Nord from the north, then follow signs for Val di Fassa to Campitello. Free private parking, reserved on request, awaits you on arrival.',
   },
 
   contact: {
@@ -195,7 +195,7 @@ const en: PageCopy = {
     goodToKnowTitle: 'Good to know',
     goodToKnow: [
       'Pets welcome, no extra charge',
-      'Free private parking included',
+      'Free private parking, on request',
       'Check-in 4–8 pm · check-out 8–10 am',
       'Bed linen and towels included',
     ],

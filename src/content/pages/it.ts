@@ -48,9 +48,9 @@ const it: PageCopy = {
     petsTitle: 'Animali ammessi, senza supplemento',
     petsText:
       'Il tuo cane è il benvenuto e non chiediamo alcun costo aggiuntivo. Dal paese partono passeggiate lungo il torrente Avisio e sentieri in quota da fare insieme.',
-    parkingTitle: 'Parcheggio privato gratuito',
+    parkingTitle: 'Parcheggio privato gratuito, su prenotazione',
     parkingText:
-      'In alta stagione trovare posto in Val di Fassa non è semplice. Da noi il parcheggio privato è gratuito e incluso nel soggiorno: arrivi, scarichi i bagagli e lasci l’auto ferma fino alla partenza.',
+      'In alta stagione trovare posto in Val di Fassa non è semplice. Da noi il parcheggio privato è gratuito e incluso nel soggiorno: arrivi, scarichi i bagagli e lasci l’auto ferma fino alla partenza. Va prenotato insieme al soggiorno: segnalacelo nella richiesta e lo riserviamo per te.',
     storageTitle: 'Deposito per sci e bici',
     storageText:
       'In cantina c’è spazio per sci, scarponi e biciclette, così l’appartamento resta caldo e in ordine.',
@@ -68,7 +68,7 @@ const it: PageCopy = {
       },
       {
         q: 'Il parcheggio è incluso?',
-        a: 'Sì, l’appartamento dispone di un parcheggio privato gratuito, incluso nel soggiorno. Non serve prenotarlo.',
+        a: 'Sì, ed è gratuito. Va però prenotato insieme al soggiorno: indicalo nella richiesta di disponibilità e lo riserviamo per te.',
       },
       {
         q: 'Quante persone può ospitare l’appartamento?',
@@ -137,14 +137,14 @@ const it: PageCopy = {
     amenitiesTitle: 'Cosa troverai',
     petsParkingTitle: 'Animali e parcheggio',
     petsText: 'Gli animali sono ammessi e non è previsto alcun supplemento per i nostri amici a 4 zampe.',
-    parkingText: 'Il parcheggio privato è gratuito e incluso nel soggiorno: nessuna prenotazione, nessun costo extra.',
+    parkingText: 'Il parcheggio privato è gratuito e si prenota insieme al soggiorno: segnalacelo nella richiesta e lo riserviamo per te.',
     rulesTitle: 'Informazioni utili',
     rules: [
       { label: 'Check-in', value: '16:00 – 20:00' },
       { label: 'Check-out', value: '08:00 – 10:00' },
       { label: 'Ospiti', value: 'Fino a 4' },
       { label: 'Animali', value: 'Ammessi, senza supplemento' },
-      { label: 'Parcheggio', value: 'Privato e gratuito' },
+      { label: 'Parcheggio', value: 'Privato e gratuito, su prenotazione' },
       { label: 'Fumo', value: 'Appartamento non fumatori' },
     ],
   },
@@ -181,7 +181,7 @@ const it: PageCopy = {
       'Sentieri per tutti i livelli, rifugi, vie ferrate e la pista ciclabile che attraversa la valle. E il tuo cane può venire con te.',
     arrivalTitle: 'Come arrivare',
     arrivalText:
-      'In auto: autostrada del Brennero A22, uscita Ora/Egna da sud o Bolzano Nord da nord, poi le indicazioni per la Val di Fassa fino a Campitello. All’arrivo ti aspetta il parcheggio privato gratuito.',
+      'In auto: autostrada del Brennero A22, uscita Ora/Egna da sud o Bolzano Nord da nord, poi le indicazioni per la Val di Fassa fino a Campitello. All’arrivo ti aspetta il parcheggio privato gratuito, che riserviamo su prenotazione.',
   },
 
   contact: {
@@ -197,7 +197,7 @@ const it: PageCopy = {
     goodToKnowTitle: 'Buono a sapersi',
     goodToKnow: [
       'Animali ammessi senza supplemento',
-      'Parcheggio privato gratuito incluso',
+      'Parcheggio privato gratuito, su prenotazione',
       'Check-in 16:00–20:00 · check-out 08:00–10:00',
       'Biancheria e asciugamani inclusi',
     ],

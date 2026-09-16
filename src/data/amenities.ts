@@ -24,11 +24,11 @@ export const AMENITIES: Amenity[] = [
     icon: 'parking',
     highlight: true,
     label: {
-      it: 'Parcheggio privato gratuito',
-      en: 'Free private parking',
-      de: 'Kostenloser Privatparkplatz',
-      pl: 'Bezpłatny prywatny parking',
-      ru: 'Бесплатная частная парковка',
+      it: 'Parcheggio privato gratuito, su prenotazione',
+      en: 'Free private parking, on request',
+      de: 'Kostenloser Privatparkplatz, auf Anfrage',
+      pl: 'Bezpłatny prywatny parking, na życzenie',
+      ru: 'Бесплатная частная парковка, по запросу',
     },
   },
   {

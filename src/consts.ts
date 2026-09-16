@@ -37,7 +37,7 @@ export const SITE = {
   },
 
   reviews: {
-    booking: { score: 9.3, max: 10 },
+    booking: { score: 9.4, max: 10 },
     airbnb: { score: 4.86, max: 5 },
   },
 

@@ -48,9 +48,9 @@ const pl: PageCopy = {
     petsTitle: 'Zwierzęta mile widziane, bez dopłat',
     petsText:
       'Twój pies jest mile widziany i nie pobieramy żadnych dodatkowych opłat. Spacery wzdłuż potoku Avisio i górskie szlaki zaczynają się w samej wiosce.',
-    parkingTitle: 'Bezpłatny prywatny parking',
+    parkingTitle: 'Bezpłatny prywatny parking, na życzenie',
     parkingText:
-      'W szczycie sezonu znalezienie miejsca parkingowego w Val di Fassa nie jest łatwe. U nas prywatny parking jest bezpłatny i wliczony w pobyt: przyjeżdżasz, rozpakowujesz bagaże i zostawiasz auto do wyjazdu.',
+      'W szczycie sezonu znalezienie miejsca parkingowego w Val di Fassa nie jest łatwe. U nas prywatny parking jest bezpłatny i wliczony w pobyt: przyjeżdżasz, rozpakowujesz bagaże i zostawiasz auto do wyjazdu. Zarezerwuj go razem z pobytem: napisz o tym w zapytaniu, a zatrzymamy miejsce dla Ciebie.',
     storageTitle: 'Przechowalnia nart i rowerów',
     storageText: 'W piwnicy jest miejsce na narty, buty i rowery, dzięki czemu apartament pozostaje ciepły i czysty.',
     roomsEyebrow: 'Apartament',
@@ -67,7 +67,7 @@ const pl: PageCopy = {
       },
       {
         q: 'Czy parking jest wliczony w cenę?',
-        a: 'Tak, apartament dysponuje bezpłatnym prywatnym parkingiem wliczonym w pobyt. Nie trzeba go rezerwować.',
+        a: 'Tak, jest bezpłatny. Trzeba go jednak zarezerwować razem z pobytem: wspomnij o tym w zapytaniu, a zarezerwujemy miejsce.',
       },
       {
         q: 'Ile osób może zamieszkać w apartamencie?',
@@ -135,14 +135,14 @@ const pl: PageCopy = {
     amenitiesTitle: 'Co znajdziesz',
     petsParkingTitle: 'Zwierzęta i parking',
     petsText: 'Zwierzęta są mile widziane i nie pobieramy dodatkowych opłat za naszych czworonożnych przyjaciół.',
-    parkingText: 'Prywatny parking jest bezpłatny i wliczony w pobyt: bez rezerwacji i bez dodatkowych kosztów.',
+    parkingText: 'Prywatny parking jest bezpłatny i rezerwuje się go razem z pobytem: wystarczy wspomnieć o tym w zapytaniu.',
     rulesTitle: 'Warto wiedzieć',
     rules: [
       { label: 'Zameldowanie', value: '16:00 – 20:00' },
       { label: 'Wymeldowanie', value: '8:00 – 10:00' },
       { label: 'Goście', value: 'Do 4 osób' },
       { label: 'Zwierzęta', value: 'Mile widziane, bez dopłat' },
-      { label: 'Parking', value: 'Prywatny i bezpłatny' },
+      { label: 'Parking', value: 'Prywatny i bezpłatny, na życzenie' },
       { label: 'Palenie', value: 'Apartament dla niepalących' },
     ],
   },
@@ -179,7 +179,7 @@ const pl: PageCopy = {
       'Szlaki na każdym poziomie, schroniska, via ferraty i ścieżka rowerowa przez dolinę. A Twój pies może iść z Tobą.',
     arrivalTitle: 'Dojazd',
     arrivalText:
-      'Samochodem: autostrada A22 Brenner, zjazd Ora/Egna od południa lub Bolzano Nord od północy, dalej w kierunku Val di Fassa do Campitello. Na miejscu czeka bezpłatny prywatny parking.',
+      'Samochodem: autostrada A22 Brenner, zjazd Ora/Egna od południa lub Bolzano Nord od północy, dalej w kierunku Val di Fassa do Campitello. Na miejscu czeka bezpłatny prywatny parking, rezerwowany na życzenie.',
   },
 
   contact: {
@@ -195,7 +195,7 @@ const pl: PageCopy = {
     goodToKnowTitle: 'Warto wiedzieć',
     goodToKnow: [
       'Zwierzęta mile widziane, bez dopłat',
-      'Bezpłatny prywatny parking w cenie',
+      'Bezpłatny prywatny parking, na życzenie',
       'Zameldowanie 16–20 · wymeldowanie 8–10',
       'Pościel i ręczniki w cenie',
     ],
