@@ -50,9 +50,9 @@ const en: PageCopy = {
       'Your dog is welcome and there is no additional fee. Walks along the Avisio stream and mountain trails start right from the village.',
     parkingTitle: 'Free private parking, on request',
     parkingText:
-      'In high season, finding a parking space in Val di Fassa is not easy. Our private parking is free and included in your stay: arrive, unload your luggage and leave the car until you go home. Book it together with your stay: mention it in your request and we will keep it for you.',
+      'In high season, finding a parking space in Val di Fassa is not easy. Our private parking is free and included in your stay: arrive, unload your luggage and your parking space is yours for the whole holiday, with no driving around looking for a spot. Book it together with your stay: mention it in your request and we will keep it for you.',
     storageTitle: 'Ski and bike storage',
-    storageText: 'The cellar has room for skis, boots and bikes, so the apartment stays warm and tidy.',
+    storageText: 'The cellar has room for skis, boots and bikes, so the apartment stays warm and tidy. If you would rather leave skis and boots right at the lifts, we can book you a ski locker at the Col Rodella cable car base station (possible extra charge): just mention it in your request.',
     roomsEyebrow: 'The apartment',
     roomsTitle: 'Wood, warmth and everything you need',
     locationEyebrow: 'Location',
@@ -79,7 +79,7 @@ const en: PageCopy = {
       },
       {
         q: 'How far is it from the ski lifts?',
-        a: 'The Col Rodella cable car, connected to the Sella Ronda, is just a few minutes’ walk away.',
+        a: 'The Col Rodella cable car, connected to the Sella Ronda, is just a few minutes’ walk away. On request we can also book you a ski locker right at the cable car (possible extra charge).',
       },
       {
         q: 'Are bed linen and towels included?',

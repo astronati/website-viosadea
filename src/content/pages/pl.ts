@@ -50,9 +50,9 @@ const pl: PageCopy = {
       'Twój pies jest mile widziany i nie pobieramy żadnych dodatkowych opłat. Spacery wzdłuż potoku Avisio i górskie szlaki zaczynają się w samej wiosce.',
     parkingTitle: 'Bezpłatny prywatny parking, na życzenie',
     parkingText:
-      'W szczycie sezonu znalezienie miejsca parkingowego w Val di Fassa nie jest łatwe. U nas prywatny parking jest bezpłatny i wliczony w pobyt: przyjeżdżasz, rozpakowujesz bagaże i zostawiasz auto do wyjazdu. Zarezerwuj go razem z pobytem: napisz o tym w zapytaniu, a zatrzymamy miejsce dla Ciebie.',
+      'W szczycie sezonu znalezienie miejsca parkingowego w Val di Fassa nie jest łatwe. U nas prywatny parking jest bezpłatny i wliczony w pobyt: przyjeżdżasz, rozpakowujesz bagaże i przez cały urlop masz swoje miejsce parkingowe, bez krążenia w poszukiwaniu wolnego miejsca. Zarezerwuj go razem z pobytem: napisz o tym w zapytaniu, a zatrzymamy miejsce dla Ciebie.',
     storageTitle: 'Przechowalnia nart i rowerów',
-    storageText: 'W piwnicy jest miejsce na narty, buty i rowery, dzięki czemu apartament pozostaje ciepły i czysty.',
+    storageText: 'W piwnicy jest miejsce na narty, buty i rowery, dzięki czemu apartament pozostaje ciepły i czysty. Jeśli wolisz zostawiać narty i buty przy wyciągu, możemy zarezerwować dla Ciebie przechowalnię nart przy dolnej stacji kolejki Col Rodella (możliwa dopłata): napisz o tym w zapytaniu.',
     roomsEyebrow: 'Apartament',
     roomsTitle: 'Drewno, ciepło i wszystko, czego potrzebujesz',
     locationEyebrow: 'Lokalizacja',
@@ -79,7 +79,7 @@ const pl: PageCopy = {
       },
       {
         q: 'Jak daleko jest do wyciągów narciarskich?',
-        a: 'Do kolejki Col Rodella, połączonej z Sella Ronda, dojdziesz pieszo w kilka minut.',
+        a: 'Do kolejki Col Rodella, połączonej z Sella Ronda, dojdziesz pieszo w kilka minut. Na życzenie możemy też zarezerwować przechowalnię nart tuż przy kolejce (możliwa dopłata).',
       },
       {
         q: 'Czy pościel i ręczniki są w cenie?',

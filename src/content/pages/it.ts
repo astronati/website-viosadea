@@ -50,10 +50,10 @@ const it: PageCopy = {
       'Il tuo cane è il benvenuto e non chiediamo alcun costo aggiuntivo. Dal paese partono passeggiate lungo il torrente Avisio e sentieri in quota da fare insieme.',
     parkingTitle: 'Parcheggio privato gratuito, su prenotazione',
     parkingText:
-      'In alta stagione trovare posto in Val di Fassa non è semplice. Da noi il parcheggio privato è gratuito e incluso nel soggiorno: arrivi, scarichi i bagagli e lasci l’auto ferma fino alla partenza. Va prenotato insieme al soggiorno: segnalacelo nella richiesta e lo riserviamo per te.',
+      'In alta stagione trovare posto in Val di Fassa non è semplice. Da noi il parcheggio privato è gratuito e incluso nel soggiorno: arrivi, scarichi i bagagli e per tutta la vacanza hai il tuo posto auto, senza girare a cercare parcheggio. Va prenotato insieme al soggiorno: segnalacelo nella richiesta e lo riserviamo per te.',
     storageTitle: 'Deposito per sci e bici',
     storageText:
-      'In cantina c’è spazio per sci, scarponi e biciclette, così l’appartamento resta caldo e in ordine.',
+      'In cantina c’è spazio per sci, scarponi e biciclette, così l’appartamento resta caldo e in ordine. Se preferisci lasciare sci e scarponi direttamente agli impianti, possiamo riservarti un deposito alla partenza della funivia Col Rodella (con eventuale costo extra): chiedicelo nella richiesta.',
     roomsEyebrow: 'L’appartamento',
     roomsTitle: 'Legno, calore e tutto il necessario',
     locationEyebrow: 'Dove siamo',
@@ -80,7 +80,7 @@ const it: PageCopy = {
       },
       {
         q: 'Quanto dista dagli impianti di sci?',
-        a: 'La funivia Col Rodella, collegata al Sella Ronda, si raggiunge a piedi in pochi minuti.',
+        a: 'La funivia Col Rodella, collegata al Sella Ronda, si raggiunge a piedi in pochi minuti. Su richiesta possiamo riservarti anche un deposito sci proprio alla funivia (con eventuale costo extra).',
       },
       {
         q: 'Biancheria e asciugamani sono inclusi?',

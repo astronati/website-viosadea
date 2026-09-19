@@ -132,6 +132,16 @@ export const AMENITIES: Amenity[] = [
     },
   },
   {
+    icon: 'ski',
+    label: {
+      it: 'Deposito sci alla funivia, su prenotazione',
+      en: 'Ski locker at the cable car, on request',
+      de: 'Skidepot an der Seilbahn, auf Anfrage',
+      pl: 'Przechowalnia nart przy kolejce, na życzenie',
+      ru: 'Лыжехранилище у канатной дороги, по запросу',
+    },
+  },
+  {
     icon: 'cablecar',
     label: {
       it: 'A pochi passi dagli impianti di risalita',

@@ -50,9 +50,9 @@ const de: PageCopy = {
       'Ihr Hund ist herzlich willkommen, und wir berechnen keine zusätzlichen Kosten. Spaziergänge am Avisio und Höhenwege beginnen direkt im Dorf.',
     parkingTitle: 'Kostenloser Privatparkplatz, auf Anfrage',
     parkingText:
-      'In der Hochsaison ist ein Parkplatz im Fassatal schwer zu finden. Bei uns ist der Privatparkplatz kostenlos und im Aufenthalt inbegriffen: ankommen, Gepäck ausladen und das Auto bis zur Abreise stehen lassen. Bitte reservieren Sie ihn zusammen mit Ihrem Aufenthalt: Geben Sie es in der Anfrage an, wir halten ihn für Sie frei.',
+      'In der Hochsaison ist ein Parkplatz im Fassatal schwer zu finden. Bei uns ist der Privatparkplatz kostenlos und im Aufenthalt inbegriffen: ankommen, Gepäck ausladen und den ganzen Urlaub über einen eigenen Stellplatz haben, ohne Parkplatzsuche. Bitte reservieren Sie ihn zusammen mit Ihrem Aufenthalt: Geben Sie es in der Anfrage an, wir halten ihn für Sie frei.',
     storageTitle: 'Ski- und Fahrradkeller',
-    storageText: 'Im Keller ist Platz für Ski, Skischuhe und Fahrräder – so bleibt die Wohnung warm und ordentlich.',
+    storageText: 'Im Keller ist Platz für Ski, Skischuhe und Fahrräder – so bleibt die Wohnung warm und ordentlich. Wenn Sie Ski und Skischuhe lieber direkt am Lift lassen möchten, reservieren wir Ihnen ein Skidepot an der Talstation der Seilbahn Col Rodella (ggf. gegen Aufpreis): Geben Sie es einfach in Ihrer Anfrage an.',
     roomsEyebrow: 'Die Ferienwohnung',
     roomsTitle: 'Holz, Wärme und alles, was Sie brauchen',
     locationEyebrow: 'Lage',
@@ -79,7 +79,7 @@ const de: PageCopy = {
       },
       {
         q: 'Wie weit ist es bis zu den Skiliften?',
-        a: 'Die Seilbahn Col Rodella mit Anschluss an die Sella Ronda erreichen Sie in wenigen Gehminuten.',
+        a: 'Die Seilbahn Col Rodella mit Anschluss an die Sella Ronda erreichen Sie in wenigen Gehminuten. Auf Anfrage reservieren wir Ihnen auch ein Skidepot direkt an der Seilbahn (ggf. gegen Aufpreis).',
       },
       {
         q: 'Sind Bettwäsche und Handtücher inklusive?',
