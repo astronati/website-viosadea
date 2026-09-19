@@ -1,0 +1,7 @@
+# Header per gli asset statici serviti da Cloudflare (Workers static assets).
+# I file in /_astro/ (foto AVIF/WebP, CSS, JS, font) hanno un hash nel nome:
+# cambiano URL a ogni modifica, quindi si possono tenere in cache per sempre.
+# Senza questa regola Cloudflare usa max-age=0 e il browser riconvalida ogni foto
+# a ogni visita.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

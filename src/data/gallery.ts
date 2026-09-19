@@ -162,6 +162,28 @@ const ENTRIES: PhotoEntry[] = [
     },
   },
   {
+    file: 'bagno/bagno-doccia.jpg',
+    room: 'bagno',
+    alt: {
+      it: 'Bagno con doccia in cristallo, lavabo in appoggio su mensola in legno e specchio',
+      en: 'Bathroom with glass shower, vessel washbasin on a wooden shelf and mirror',
+      de: 'Bad mit Glasdusche, Aufsatzwaschbecken auf Holzablage und Spiegel',
+      pl: 'Łazienka z kabiną prysznicową, umywalką nablatową na drewnianej półce i lustrem',
+      ru: 'Ванная с душевой кабиной, накладной раковиной на деревянной полке и зеркалом',
+    },
+  },
+  {
+    file: 'bagno/bagno-lavabo.jpg',
+    room: 'bagno',
+    alt: {
+      it: 'Bagno con lavabo, WC, bidet e scaldasalviette',
+      en: 'Bathroom with washbasin, WC, bidet and heated towel rail',
+      de: 'Bad mit Waschbecken, WC, Bidet und Handtuchheizkörper',
+      pl: 'Łazienka z umywalką, WC, bidetem i grzejnikiem na ręczniki',
+      ru: 'Ванная с раковиной, унитазом, биде и полотенцесушителем',
+    },
+  },
+  {
     file: 'bagno/bagno-asciugamani.jpg',
     room: 'bagno',
     alt: {
@@ -203,6 +225,17 @@ const ENTRIES: PhotoEntry[] = [
       de: 'Gaubenfenster mit karierten Vorhängen',
       pl: 'Okno w lukarnie z zasłonami w kratę',
       ru: 'Мансардное окно с клетчатыми занавесками',
+    },
+  },
+  {
+    file: 'bagno/bagno-mobile.jpg',
+    room: 'bagno',
+    alt: {
+      it: 'Mobile in legno antico con asciugamani e set di cortesia',
+      en: 'Reclaimed-wood cabinet with towels and toiletries',
+      de: 'Schrank aus Altholz mit Handtüchern und Pflegeprodukten',
+      pl: 'Szafka ze starego drewna z ręcznikami i kosmetykami',
+      ru: 'Шкафчик из старого дерева с полотенцами и туалетными принадлежностями',
     },
   },
   {

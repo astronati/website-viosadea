@@ -43,10 +43,23 @@ const t = useTranslations(Astro.props.locale);
       img.alt = link.dataset.alt ?? '';
       caption.textContent = link.dataset.caption ?? '';
       count.textContent = group.length > 1 ? `${index + 1} / ${group.length}` : '';
-      // precarica la successiva
-      const next = group[(index + 1) % group.length];
-      if (next) new Image().src = next.href;
+      // precarica la precedente e la successiva
+      preload(group[(index + 1) % group.length]);
+      preload(group[(index - 1 + group.length) % group.length]);
     };
+
+    const preloaded = new Set<string>();
+    const preload = (link?: HTMLAnchorElement) => {
+      if (!link || preloaded.has(link.href)) return;
+      preloaded.add(link.href);
+      new Image().src = link.href;
+    };
+    // Inizia a scaricare la foto grande appena il dito o il mouse è sulla miniatura.
+    document.addEventListener(
+      'pointerover',
+      (e) => preload((e.target as HTMLElement).closest<HTMLAnchorElement>('a[data-lightbox]') ?? undefined),
+      { passive: true },
+    );
 
     document.addEventListener('click', (e) => {
       const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[data-lightbox]');
