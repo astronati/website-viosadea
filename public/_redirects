@@ -5,6 +5,8 @@
 /en/privacy-cookie-policy/ /en/privacy/ 301
 /sitemap.xml /sitemap-index.xml 301
 /wp-sitemap.xml /sitemap-index.xml 301
+# Sitemap di Yoast, ancora registrata in Search Console dal 2023
+/sitemap_index.xml /sitemap-index.xml 301
 /wp-login.php / 301
 /wp-content/uploads/* /galleria/ 301
 /wp-admin/* / 301

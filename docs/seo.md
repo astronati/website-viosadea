@@ -32,15 +32,24 @@ citate molto più volentieri di frasi promozionali.
    ```
    Devono rispondere `200` (vale anche per `OAI-SearchBot`, `PerplexityBot`,
    `meta-externalagent`).
-2. **Google Search Console** → proprietà `www.viosadea.com`, invia
-   `sitemap-index.xml` e `sitemap-images.xml`, poi *Controllo URL → Richiedi
-   indicizzazione* per la home.
-3. **Bing Webmaster Tools** (<https://www.bing.com/webmasters>): importa da Search
-   Console. Conta doppio, perché l'indice di Bing alimenta Copilot e la ricerca di
-   ChatGPT.
-4. **Google Business Profile**: scheda dell'attività su Maps, con link al sito,
-   foto, categoria "Appartamento con servizi alberghieri" e attributi (animali
-   ammessi, parcheggio gratuito). È la leva più forte per chi cerca dalla zona.
+2. **Google Search Console** — proprietà `viosadea.com` (dominio), già verificata.
+   Il 22/09/2026 sono state inviate `sitemap-index.xml` e `sitemap-images.xml`
+   (erano già presenti `sitemap.xml`, che redirige, e la vecchia `sitemap_index.xml`
+   di Yoast del 2023, ora servita da un redirect in `public/_redirects`).
+   Dopo un cambio importante conviene *Controllo URL → Richiedi indicizzazione*.
+3. **Bing Webmaster Tools** (<https://www.bing.com/webmasters>) — **da fare**:
+   richiede di creare l'account (accesso con lo stesso Google della Search Console,
+   poi *Import from Google Search Console*). Conta doppio, perché l'indice di Bing
+   alimenta Copilot e la ricerca di ChatGPT. IndexNow intanto notifica già Bing a
+   ogni deploy, ma senza account non se ne vedono i dati.
+4. **Google Maps / Business Profile** — una scheda esiste già: *"Cèsa Viosadea in
+   the heart of Campitello di Fassa"*, generata da Google Vacation Rentals con i
+   dati di Booking/Airbnb, senza link al sito. Un **Business Profile classico non è
+   ammesso** per una casa vacanza affittata senza personale in loco (regole di
+   idoneità di Google): il link diretto sulla scheda si ottiene solo entrando in
+   Google Vacation Rentals tramite un partner di connettività con motore di
+   prenotazione, che oggi il sito non ha. Da rivalutare solo se un domani si
+   aggiunge la prenotazione diretta con pagamento.
 5. **Link in entrata**: sito del consorzio (`fassa.com`), Dolomiti Superski,
    Booking e Airbnb devono puntare a `https://www.viosadea.com` (non al vecchio
    dominio o a URL `workers.dev`).
