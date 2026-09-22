@@ -19,8 +19,9 @@ export const SITE = {
     province: 'TN',
     country: 'IT',
   },
-  // TODO: coordinate indicative del centro di Campitello, verificare sulla mappa
-  geo: { latitude: 46.4756, longitude: 11.7404 },
+  // Coordinate di Piaz Veie (la piazza vecchia), da OpenStreetMap.
+  // TODO: se si vuole il punto esatto del portone, prenderlo da Google Maps.
+  geo: { latitude: 46.4774, longitude: 11.7406 },
 
   whatsapp: '+393936773323',
 
@@ -47,6 +48,14 @@ export const SITE = {
     lang: { it: 'it', en: 'en-gb', de: 'de', pl: 'pl', ru: 'ru' },
   },
   airbnb: 'https://www.airbnb.com/rooms/643139657613097973',
+
+  // Altre pagine ufficiali della struttura: finiscono in `sameAs` nei dati
+  // strutturati, così motori di ricerca e AI capiscono che parlano della stessa
+  // struttura (la ragione sociale sui portali locali è "Caristi Rosa").
+  listings: [
+    'https://www.fassa.com/en/accommodation/caristi-rosa-cesa-viosadea',
+    'https://www.dolomitisuperski.com/en/plan-and-book/accommodation/Val-di-Fassa/CARISTI-ROSA-CESA-VIOSADEA',
+  ],
 
   // Cloudflare Web Analytics (cookieless). Se il sito è proxato da Cloudflare si
   // può attivare dal dashboard senza token; altrimenti incolla qui il token.

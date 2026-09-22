@@ -1,6 +1,6 @@
 // Dati strutturati schema.org (JSON-LD) per SEO e motori generativi.
 import { SITE, airbnbUrl, bookingUrl } from '../consts';
-import { HREFLANG, SITE_URL, type Locale } from '../i18n/locales';
+import { HREFLANG, LOCALES, SITE_URL, type Locale } from '../i18n/locales';
 import { pathFor, type PageKey } from '../i18n/routes';
 import type { FAQItem } from '../content/types';
 
@@ -31,9 +31,25 @@ export function rentalJsonLd(locale: Locale, description: string, images: string
       addressCountry: SITE.address.country,
     },
     geo: { '@type': 'GeoCoordinates', latitude: SITE.geo.latitude, longitude: SITE.geo.longitude },
+    hasMap: `https://www.google.com/maps/search/?api=1&query=${SITE.geo.latitude},${SITE.geo.longitude}`,
+    containedInPlace: {
+      '@type': 'Place',
+      name: 'Val di Fassa, Dolomiti',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: SITE.address.locality,
+        addressRegion: SITE.address.region,
+        addressCountry: SITE.address.country,
+      },
+    },
+    telephone: SITE.whatsapp,
+    // Le lingue in cui rispondiamo alle richieste: se lo chiedono a un'AI, lo sa.
+    knowsLanguage: LOCALES.map((l) => HREFLANG[l]),
     checkinTime: a.checkIn.from,
     checkoutTime: a.checkOut.to,
     petsAllowed: true,
+    numberOfRooms: a.bedrooms,
+    tourBookingPage: bookingUrl(locale),
     containsPlace: {
       '@type': 'Accommodation',
       additionalType: 'EntirePlace',
@@ -57,7 +73,7 @@ export function rentalJsonLd(locale: Locale, description: string, images: string
         { name: 'smokingAllowed', value: false },
       ].map((f) => ({ '@type': 'LocationFeatureSpecification', ...f })),
     },
-    sameAs: [bookingUrl(locale), airbnbUrl(locale)],
+    sameAs: [bookingUrl(locale), airbnbUrl(locale), ...SITE.listings],
   };
 }
 

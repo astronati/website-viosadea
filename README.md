@@ -35,6 +35,7 @@ npm run deploy    # pubblica su Cloudflare (docs/deploy.md)
 | Colori e tipografia | `src/styles/global.css` |
 | Destinatario e mittente delle richieste | `wrangler.jsonc` → `vars` |
 | Redirect dei vecchi URL | `public/_redirects` |
+| Riassunto per le AI (`/llms.txt`) | generato da `src/pages/llms.txt.ts` |
 
 La struttura dei testi è tipizzata (`src/content/types.ts`): se una lingua non ha
 una chiave, `npm run check` fallisce.
@@ -94,3 +95,4 @@ Segnati con `TODO` nel codice:
 - [docs/setup-cloudflare.md](docs/setup-cloudflare.md) — primo setup: account, token, Turnstile, Brevo, dominio, GitHub
 - [docs/deploy.md](docs/deploy.md) — rilasci di routine, verifiche, rollback, comandi
 - [docs/dns-migration.md](docs/dns-migration.md) — DNS, posta e dominio: com'è configurato oggi e cosa fare se si rompe
+- [docs/seo.md](docs/seo.md) — SEO e motori generativi: cosa fa il sito da solo e cosa va fatto sui servizi esterni

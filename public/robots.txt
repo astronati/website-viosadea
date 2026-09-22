@@ -2,4 +2,27 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
+# Crawler dei motori generativi (ChatGPT, Claude, Perplexity, Gemini, Copilot):
+# esplicitamente ammessi. Vogliamo essere citati quando chiedono un alloggio in
+# Val di Fassa. Attenzione: serve anche che Cloudflare non li blocchi
+# (dashboard → Security → Bots / AI Crawl Control).
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: Claude-SearchBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: meta-externalagent
+User-agent: Amazonbot
+User-agent: Bytespider
+User-agent: CCBot
+User-agent: cohere-ai
+Allow: /
+Disallow: /api/
+
 Sitemap: https://www.viosadea.com/sitemap-index.xml
+Sitemap: https://www.viosadea.com/sitemap-images.xml

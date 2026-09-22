@@ -21,7 +21,8 @@
     "cf:secret:brevo": "wrangler secret put BREVO_API_KEY --name viosadea",
     "cf:logs": "wrangler tail viosadea",
     "cf:deployments": "wrangler deployments list --name viosadea",
-    "import:photos": "node scripts/import-wp-media.mjs"
+    "import:photos": "node scripts/import-wp-media.mjs",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.1.3",

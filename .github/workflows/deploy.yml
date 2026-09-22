@@ -37,3 +37,9 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy --config dist/server/wrangler.json --message "deploy ${{ github.sha }}"
+
+      # Avvisa Bing/Yandex delle pagine pubblicate (Google usa la sitemap in
+      # Search Console). Se il ping fallisce il deploy resta valido.
+      - name: IndexNow
+        continue-on-error: true
+        run: npm run indexnow
