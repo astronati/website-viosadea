@@ -21,14 +21,17 @@ citate molto più volentieri di frasi promozionali.
 
 ## Da fare/controllare fuori dal codice
 
-1. **Cloudflare non deve bloccare i crawler AI.** Dashboard → *Security → Bots*
-   (e *AI Crawl Control*): se il blocco dei bot AI è attivo, GPTBot e ClaudeBot
-   ricevono 403 e il sito non viene mai citato. Verifica:
+1. **Cloudflare non deve bloccare i crawler AI.** Fatto il 22/09/2026: dashboard →
+   *Security → Settings → Configure AI bot policies*, le tre categorie (**Search**,
+   **Agent**, **Training**) sono tutte su *Allow (do not block)*. Prima *Training*
+   era su *Disallow* e GPTBot e ClaudeBot ricevevano 403. Se un giorno il sito
+   sparisce dalle risposte delle AI, ricontrolla qui per primo. Verifica:
    ```sh
    curl -s -o /dev/null -w '%{http_code}\n' -A "Mozilla/5.0 (compatible; GPTBot/1.1; +https://openai.com/gptbot)" https://www.viosadea.com/
    curl -s -o /dev/null -w '%{http_code}\n' -A "Mozilla/5.0 (compatible; ClaudeBot/1.0)" https://www.viosadea.com/
    ```
-   Devono rispondere `200`.
+   Devono rispondere `200` (vale anche per `OAI-SearchBot`, `PerplexityBot`,
+   `meta-externalagent`).
 2. **Google Search Console** → proprietà `www.viosadea.com`, invia
    `sitemap-index.xml` e `sitemap-images.xml`, poi *Controllo URL → Richiedi
    indicizzazione* per la home.
