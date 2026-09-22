@@ -28,15 +28,20 @@ Valori di questo progetto: Worker **`viosadea`**, dominio **`viosadea.com`**
 
 ## Checklist
 
-- [ ] 1. Account Cloudflare dedicato
-- [ ] 2. Account ID + API token → `.envrc`
-- [ ] 3. Primo deploy su `workers.dev`
-- [ ] 4. Turnstile (anti-spam del modulo)
-- [ ] 5. Brevo: API key e test del modulo
-- [ ] 6. Dominio su Cloudflare (migrazione DNS da Netsons)
-- [ ] 7. Collegamento del dominio al Worker
-- [ ] 8. GitHub Actions
+- [x] 1. Account Cloudflare dedicato
+- [x] 2. Account ID + API token → `.envrc`
+- [x] 3. Primo deploy su `workers.dev`
+- [x] 4. Turnstile (anti-spam del modulo)
+- [x] 5. Brevo: API key e test del modulo
+- [x] 6. Dominio su Cloudflare (migrazione DNS da Netsons)
+- [x] 7. Collegamento del dominio al Worker
+- [x] 8. GitHub Actions
 - [ ] 9. Web Analytics + Google Search Console
+
+> Setup completato il 22/09/2026: il sito è online su `https://www.viosadea.com`.
+> Questi passi restano come riferimento (rifare l'account, rigenerare il token,
+> capire com'è messo insieme il tutto). Configurazione corrente del DNS e della
+> posta: [`dns-migration.md`](dns-migration.md).
 
 Brevo (step 5) non dipende dal DNS: il modulo si può attivare e provare già su
 `workers.dev`, prima della migrazione.
@@ -56,7 +61,9 @@ Nel dashboard: *Workers & Pages* → scegli il sottodominio `workers.dev` dell'a
   - *Account* → **Workers Scripts: Edit**
   - *Account* → **Workers KV Storage: Edit** (l'adapter crea un KV `SESSION` al primo deploy)
   - *Zone* → **Workers Routes: Edit**, **DNS: Edit** — *Zone Resources*: `viosadea.com`
-    (se la zona non esiste ancora, aggiungi questi permessi modificando il token dopo lo step 6)
+    (se la zona non esiste ancora, aggiungi questi permessi modificando il token dopo lo step 6).
+    Aggiungi anche *Zone* → **Dynamic Redirect: Edit** se vuoi gestire da API la
+    Redirect Rule apex → www.
 
 Salva le credenziali **solo** nel file locale `.envrc` (git-ignored):
 
@@ -73,8 +80,8 @@ npm run cf:whoami            # ⚠️ DEVE mostrare l'Account ID dell'account de
 
 ## 3. Primo deploy su `workers.dev`
 Il Worker **nasce con il primo deploy**, non va creato a mano. Il blocco `routes`
-in `wrangler.jsonc` resta **commentato** finché la zona non è Active (step 6),
-altrimenti il deploy fallisce.
+in `wrangler.jsonc` va tenuto **commentato** finché la zona non è Active (step 6),
+altrimenti il deploy fallisce; oggi è attivo perché il dominio è collegato.
 
 ```sh
 nvm use
@@ -122,7 +129,8 @@ Il dominio `viosadea.com` risulta già collegato a un account Brevo (record
    *Settings → Security → Authorized IPs* lascia **disattivato** "Block unknown IP
    addresses". Se Brevo manda un'email di IP bloccato, disattivalo di nuovo.
 4. **Test** (nessun nuovo deploy necessario: i segreti sono già sul Worker):
-   - invia una richiesta dal modulo su `workers.dev`;
+   - invia una richiesta dal modulo (`https://www.viosadea.com/contatti/`, oppure
+     `workers.dev` prima del cutover);
    - deve arrivare a **viosadea@gmail.com** con oggetto `Richiesta gg/mm/aaaa → …`;
      "Rispondi" scrive direttamente all'ospite. La prima volta controlla lo spam.
    - Se non arriva: `npm run cf:logs`, riprova e cerca le righe `[richiesta]`
@@ -134,26 +142,27 @@ un modulo contatti. Per cambiare destinatario: `CONTACT_TO` in `wrangler.jsonc` 
 `npm run deploy`.
 
 ## 6. Dominio su Cloudflare
-Segui **[`dns-migration.md`](dns-migration.md)**: aggiunta della zona, verifica dei
-record importati (la posta resta su Netsons), SPF, cambio nameserver da Netsons.
-Attendi lo stato **Active** della zona prima di continuare.
+Fatto: la zona `viosadea.com` è Active su Cloudflare e i nameserver sono i suoi.
+Stato dei record, posta e verifiche: **[`dns-migration.md`](dns-migration.md)**.
 
-> ⚠️ Non attivare **Email Routing** di Cloudflare sul dominio: prenderebbe il
-> controllo degli MX e la posta Netsons smetterebbe di arrivare.
+La posta in arrivo è gestita da **Cloudflare Email Routing** (catch-all →
+`viosadea@gmail.com`), non più dalle caselle cPanel di Netsons: gli MX puntano a
+`route1/2/3.mx.cloudflare.net` e non vanno cambiati.
 
 ## 7. Collegamento del dominio al Worker
 Cloudflare **non** crea un Custom Domain su un nome che ha già un record DNS.
 Procedura completa in [`dns-migration.md`](dns-migration.md) step 5, in breve:
 
-1. *DNS → Records*: **elimina solo** il record A `viosadea.com` e il CNAME `www` (il
-   vecchio WordPress). MX, `mail`, `webmail`, `cpanel`, TXT, SRV restano.
-2. In `wrangler.jsonc` **scommenta** `routes` → `npm run deploy`
+1. *DNS → Records*: **elimina** il record A `viosadea.com` e il CNAME `www` (il
+   vecchio WordPress). MX e TXT restano.
+2. In `wrangler.jsonc` tieni attivo `routes` → `npm run deploy`
    (oppure dashboard: *Workers & Pages → viosadea → Settings → Domains & Routes →
    Add → Custom Domain* per `www.viosadea.com` e `viosadea.com`).
-3. **Redirect apex → www**: *Rules → Redirect Rules → Create rule* — Wildcard pattern
+3. **Redirect apex → www** (unica cosa che il deploy non crea da solo):
+   *Rules → Redirect Rules → Create rule* — Wildcard pattern
    `https://viosadea.com/*` → `https://www.viosadea.com/${1}`, 301, *Preserve query
    string* attivo.
-4. Verifiche finali: [`dns-migration.md`](dns-migration.md) step 5 punto 4.
+4. Verifiche finali: [`dns-migration.md`](dns-migration.md) → "Verifiche rapide".
 
 ## 8. GitHub Actions
 Il workflow [`../.github/workflows/deploy.yml`](../.github/workflows/deploy.yml)

@@ -7,15 +7,15 @@
   "compatibility_date": "2026-07-01",
   "compatibility_flags": ["nodejs_compat"],
 
-  // URL *.workers.dev per testare prima del cutover del dominio.
+  // URL *.workers.dev, tenuto attivo per le anteprime.
   "workers_dev": true,
 
-  // Domini custom: scommentare SOLO quando la zona viosadea.com è Active su
-  // Cloudflare (vedi docs/dns-migration.md). Prima, il deploy fallirebbe.
-  // "routes": [
-  //   { "pattern": "www.viosadea.com", "custom_domain": true },
-  //   { "pattern": "viosadea.com", "custom_domain": true }
-  // ],
+  // Domini di produzione. `viosadea.com` serve solo a far passare l'apex dal
+  // proxy: una Redirect Rule lo manda su www (docs/dns-migration.md).
+  "routes": [
+    { "pattern": "www.viosadea.com", "custom_domain": true },
+    { "pattern": "viosadea.com", "custom_domain": true }
+  ],
 
   // Variabili non segrete del modulo richieste (/api/richiesta), inviato con Brevo.
   // MAIL_FROM deve appartenere a un dominio autenticato su Brevo (viosadea.com).
