@@ -3,9 +3,14 @@
 ## Cosa c'è
 
 **Cloudflare Web Analytics**, senza cookie: nessun banner da mostrare e nessun
-dato personale raccolto. Dashboard Cloudflare → *Analytics & Logs → Web Analytics*
-→ `viosadea.com`. Mostra visite, pagine viste, percorsi, referrer, paese e
-dispositivo.
+dato personale raccolto.
+[Pannello del sito](https://dash.cloudflare.com/e874f5ea796bcf21353aac8e5177a9a6/web-analytics)
+(a mano: dashboard Cloudflare → *Analytics → Web analytics* → `viosadea.com`).
+Mostra visite, pagine viste, percorsi, referrer, paese e dispositivo.
+
+Il riassunto per l'uso quotidiano — dove guardare e quali link distribuire — sta
+nel [README](../README.md#statistiche-dove-si-guardano); qui restano i dettagli
+tecnici.
 
 Lo snippet è incluso dal sito (`src/layouts/Base.astro`) con il token in
 `src/consts.ts` → `cfBeaconToken`. **L'installazione automatica del dashboard non
