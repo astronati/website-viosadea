@@ -7,8 +7,11 @@
   "compatibility_date": "2026-07-01",
   "compatibility_flags": ["nodejs_compat"],
 
-  // URL *.workers.dev, tenuto attivo per le anteprime.
-  "workers_dev": true,
+  // URL *.workers.dev disattivato: il sito risponde solo sul dominio, così non
+  // esiste una copia pubblica (e indicizzabile) su viosadea.viosadea.workers.dev.
+  // Per provare le modifiche prima del rilascio: `npm run preview` (Worker locale).
+  "workers_dev": false,
+  "preview_urls": false,
 
   // Domini di produzione. `viosadea.com` serve solo a far passare l'apex dal
   // proxy: una Redirect Rule lo manda su www (docs/dns-migration.md).

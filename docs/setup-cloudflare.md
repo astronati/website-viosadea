@@ -91,6 +91,12 @@ npm run deploy       # astro build && wrangler deploy --config dist/server/wrang
 ```
 
 Apri l'URL `workers.dev` stampato a fine deploy e rivedi il sito su telefono.
+
+> Dopo il cutover l'URL `workers.dev` è stato **disattivato**
+> (`"workers_dev": false` e `"preview_urls": false` in `wrangler.jsonc`): il sito
+> risponde solo sul dominio, così non esiste una copia pubblica indicizzabile. Per
+> provare le modifiche prima di pubblicare si usa `npm run preview` (Worker locale).
+> Per riattivarlo temporaneamente: rimetti `true` e `npm run deploy`.
 Finché non completi lo step 5 il modulo contatti risponde con errore e invita a
 usare WhatsApp: è previsto.
 
