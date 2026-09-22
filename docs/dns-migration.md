@@ -40,7 +40,12 @@ Brevo non richiede un `include` SPF: autentica il dominio con DKIM.
 
 ## Verifiche rapide
 
+Impostazioni della zona da tenere così: *SSL/TLS → Edge Certificates →* **Always
+Use HTTPS attivo** (senza, l'apex rispondeva in chiaro su http://) e la Redirect
+Rule *apex → www* creata da template (*Rules → Redirect Rules*).
+
 ```sh
+curl -sI http://viosadea.com/ | grep -i location        # → https://…
 curl -sI https://www.viosadea.com/ | head -1            # 200 dal Worker
 curl -sI https://viosadea.com/ | grep -i location       # → https://www.viosadea.com/
 dig +short MX viosadea.com                              # solo route*.mx.cloudflare.net
@@ -89,7 +94,9 @@ Cloudflare: modifiche al Zone Editor di Netsons non hanno più alcun effetto.
    (`webmail`, `cpanel`, `whm`, `webdisk`, `ftp`, `ssh`, `git`, `autodiscover`,
    `autoconfig`, `_caldav*`, `_carddav*`, `_autodiscover`), il DKIM cPanel
    `default._domainkey` e l'`ip4:46.252.148.112` dallo SPF.
-5. **Disdetta dell'hosting Netsons** (solo hosting, non il dominio).
+5. **22/09/2026** — Redirect Rule apex → www (301, query preservata) e
+   *Always Use HTTPS* attivato sulla zona.
+6. **Disdetta dell'hosting Netsons** (solo hosting, non il dominio).
 
 Rollback al vecchio WordPress non più possibile: dopo la disdetta i file non
 esistono più (resta solo il backup scaricato prima della chiusura).
