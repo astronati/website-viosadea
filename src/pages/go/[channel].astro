@@ -1,0 +1,58 @@
+---
+// Pagina ponte per contare da dove arriva chi apre il link (src/data/channels.ts).
+//
+// Carica solo il beacon di Cloudflare Web Analytics — che registra la visita a
+// /go/<canale>/ — e passa subito alla home. Niente CSS, niente immagini: a
+// connessione normale il salto è impercettibile.
+import type { GetStaticPaths } from 'astro';
+import { SITE } from '../../consts';
+import { CHANNELS } from '../../data/channels';
+import { SITE_URL } from '../../i18n/locales';
+
+export const getStaticPaths = (() =>
+  CHANNELS.map((c) => ({ params: { channel: c.id } }))) satisfies GetStaticPaths;
+
+const target = new URL('/', SITE_URL).href;
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Pagina tecnica: non deve finire nei risultati di ricerca. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href={target} />
+    <title>Cèsa Viosadea</title>
+    <!-- Se JavaScript è disattivato ci pensa il browser, dopo un secondo. -->
+    <noscript><meta http-equiv="refresh" content="1;url=/" /></noscript>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #faf8f2;
+        color: #4a3a2a;
+        font: 1rem/1.5 system-ui, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <p><a href="/">Cèsa Viosadea — continua</a></p>
+    {
+      SITE.cfBeaconToken && (
+        <script
+          is:inline
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: SITE.cfBeaconToken })}
+        />
+      )
+    }
+    <script is:inline>
+      // Lascia al beacon il tempo di partire, poi manda alla home senza lasciare
+      // questa pagina nella cronologia (replace: il tasto indietro non ci torna).
+      setTimeout(() => location.replace('/'), 400);
+    </script>
+  </body>
+</html>

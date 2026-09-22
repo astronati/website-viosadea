@@ -57,9 +57,10 @@ export const SITE = {
     'https://www.dolomitisuperski.com/en/plan-and-book/accommodation/Val-di-Fassa/CARISTI-ROSA-CESA-VIOSADEA',
   ],
 
-  // Cloudflare Web Analytics (cookieless). Se il sito è proxato da Cloudflare si
-  // può attivare dal dashboard senza token; altrimenti incolla qui il token.
-  cfBeaconToken: '',
+  // Cloudflare Web Analytics (senza cookie, nessun banner da mostrare).
+  // L'installazione automatica del dashboard non funziona sui siti serviti da un
+  // Worker: lo snippet va incluso da noi, con il token del sito (site tag).
+  cfBeaconToken: 'b6d568f06330474ea17d23ff4755f33a',
 
   // Site key pubblica del widget Turnstile "viosadea" (modalità Managed).
   // Il secret corrispondente è un segreto del Worker: npm run cf:secret:turnstile.

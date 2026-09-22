@@ -36,6 +36,7 @@ npm run deploy    # pubblica su Cloudflare (docs/deploy.md)
 | Destinatario e mittente delle richieste | `wrangler.jsonc` → `vars` |
 | Redirect dei vecchi URL | `public/_redirects` |
 | Riassunto per le AI (`/llms.txt`) | generato da `src/pages/llms.txt.ts` |
+| Canali di provenienza (`/go/<canale>`) | `src/data/channels.ts` |
 
 La struttura dei testi è tipizzata (`src/content/types.ts`): se una lingua non ha
 una chiave, `npm run check` fallisce.
@@ -70,7 +71,7 @@ Turnstile. La posta in arrivo `@viosadea.com` è inoltrata a `viosadea@gmail.com
 5. [x] DNS su Cloudflare, posta su Email Routing → [docs/dns-migration.md](docs/dns-migration.md)
 6. [x] Dominio sul Worker (Custom Domain apex + www) + redirect apex → www
 7. [x] Secrets GitHub (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`) per il deploy automatico
-8. [ ] Web Analytics, Search Console, link aggiornati su Booking/Airbnb
+8. [x] Web Analytics e Search Console attivi; restano da aggiornare i link su Booking/Airbnb
 
 ### Rilasci successivi → [docs/deploy.md](docs/deploy.md)
 
@@ -96,3 +97,4 @@ Segnati con `TODO` nel codice:
 - [docs/deploy.md](docs/deploy.md) — rilasci di routine, verifiche, rollback, comandi
 - [docs/dns-migration.md](docs/dns-migration.md) — DNS, posta e dominio: com'è configurato oggi e cosa fare se si rompe
 - [docs/seo.md](docs/seo.md) — SEO e motori generativi: cosa fa il sito da solo e cosa va fatto sui servizi esterni
+- [docs/analytics.md](docs/analytics.md) — visite e provenienza: i link `/go/<canale>` da distribuire

@@ -52,7 +52,12 @@ export default defineConfig({
     sitemap({
       // Gli slug sono localizzati (/appartamento, /de/ferienwohnung…), quindi le
       // alternate hreflang si calcolano dalla tabella delle rotte e non dal prefisso.
-      filter: (page) => !new URL(page).pathname.startsWith('/404'),
+      // Fuori dalla sitemap: la 404 e le porte d'ingresso /go/<canale>/, che sono
+      // pagine tecniche di conteggio (src/data/channels.ts) e stanno in noindex.
+      filter: (page) => {
+        const { pathname } = new URL(page);
+        return !pathname.startsWith('/404') && !pathname.startsWith('/go/');
+      },
       serialize(item) {
         const match = findRouteByPath(new URL(item.url).pathname);
         if (match) {
