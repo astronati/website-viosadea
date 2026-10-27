@@ -52,14 +52,14 @@ const ENTRIES: PhotoEntry[] = [
     },
   },
   {
-    file: 'camera-matrimoniale/matrimoniale-letto.jpg',
+    file: 'camera-matrimoniale/matrimoniale-mansarda.jpg',
     room: 'camera-matrimoniale',
     alt: {
-      it: 'Camera matrimoniale mansardata con travi in legno e quadro delle Dolomiti',
-      en: 'Attic double bedroom with wooden beams and a Dolomites print',
-      de: 'Doppelzimmer im Dachgeschoss mit Holzbalken und Dolomitenbild',
-      pl: 'Sypialnia małżeńska na poddaszu z drewnianymi belkami i obrazem Dolomitów',
-      ru: 'Спальня с двуспальной кроватью в мансарде с деревянными балками и картиной Доломитов',
+      it: 'Letto matrimoniale sotto il soffitto in legno, con Smart TV e panche decorate',
+      en: 'Double bed under the wooden ceiling, with Smart TV and decorated benches',
+      de: 'Doppelbett unter der Holzdecke, mit Smart-TV und verzierten Bänken',
+      pl: 'Łóżko małżeńskie pod drewnianym sufitem, ze Smart TV i zdobionymi ławami',
+      ru: 'Двуспальная кровать под деревянным потолком, Smart TV и декоративные скамьи',
     },
   },
   {
@@ -74,14 +74,14 @@ const ENTRIES: PhotoEntry[] = [
     },
   },
   {
-    file: 'camera-matrimoniale/matrimoniale-mansarda.jpg',
+    file: 'camera-matrimoniale/matrimoniale-letto.jpg',
     room: 'camera-matrimoniale',
     alt: {
-      it: 'Letto matrimoniale sotto il soffitto in legno, con Smart TV e panche decorate',
-      en: 'Double bed under the wooden ceiling, with Smart TV and decorated benches',
-      de: 'Doppelbett unter der Holzdecke, mit Smart-TV und verzierten Bänken',
-      pl: 'Łóżko małżeńskie pod drewnianym sufitem, ze Smart TV i zdobionymi ławami',
-      ru: 'Двуспальная кровать под деревянным потолком, Smart TV и декоративные скамьи',
+      it: 'Camera matrimoniale mansardata con travi in legno e quadro delle Dolomiti',
+      en: 'Attic double bedroom with wooden beams and a Dolomites print',
+      de: 'Doppelzimmer im Dachgeschoss mit Holzbalken und Dolomitenbild',
+      pl: 'Sypialnia małżeńska na poddaszu z drewnianymi belkami i obrazem Dolomitów',
+      ru: 'Спальня с двуспальной кроватью в мансарде с деревянными балками и картиной Доломитов',
     },
   },
   {
@@ -93,6 +93,17 @@ const ENTRIES: PhotoEntry[] = [
       de: 'Ecke im Dachgeschoss mit Holzbänken im Hirschdekor',
       pl: 'Kącik na poddaszu z drewnianymi ławami w jelenie',
       ru: 'Уголок в мансарде с деревянными скамьями с оленями',
+    },
+  },
+  {
+    file: 'cameretta/cameretta-letti-singoli.jpg',
+    room: 'cameretta',
+    alt: {
+      it: 'Seconda camera con due letti singoli separati e quadro delle Dolomiti',
+      en: 'Second bedroom with two separate single beds and a Dolomites print',
+      de: 'Zweites Schlafzimmer mit zwei getrennten Einzelbetten und Dolomitenbild',
+      pl: 'Druga sypialnia z dwoma osobnymi łóżkami pojedynczymi i obrazem Dolomitów',
+      ru: 'Вторая спальня с двумя раздельными односпальными кроватями и картиной Доломитов',
     },
   },
   {
