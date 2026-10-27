@@ -25,11 +25,11 @@ const t = useTranslations(locale);
 const copy = getCopy(locale);
 const h = copy.home;
 
-const hero = photo('soggiorno/soggiorno-scala.jpg');
-const kitchen = photo('cucina/cucina-tavola.jpg');
-const bedroom = photo('camera-matrimoniale/matrimoniale-1.jpg');
+const hero = photo('soggiorno/soggiorno-arco.jpg');
+const kitchen = photo('cucina/cucina-pranzo-2.jpg');
+const bedroom = photo('camera-matrimoniale/matrimoniale-letto.jpg');
 const entrance = photo('esterno/esterno-2.jpg');
-const village = photo('esterno/vista-piazza.jpg');
+const village = photo('esterno/chiesetta-dolomiti.jpg');
 
 const ldImages = await Promise.all(
   [hero, kitchen, bedroom, entrance].map(async (p) => (await getImage({ src: p.src, width: 1200, format: 'jpg' })).src),

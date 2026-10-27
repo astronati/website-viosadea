@@ -32,7 +32,7 @@ const rooms = await Promise.all(
   }),
 );
 
-const cover = photo('soggiorno/soggiorno-scala.jpg');
+const cover = photo('soggiorno/soggiorno-scala-2.jpg');
 const ldImage = (await getImage({ src: cover.src, width: 1200, format: 'jpg' })).src;
 const jsonLd = [
   rentalJsonLd(locale, copy.meta.apartment.description, [ldImage]),
